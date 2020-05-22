@@ -1,3 +1,4 @@
+
 var Housewife = require('../model/housewife.model')
 var config = require('../config');
 require('../middleware/cloundinary')
@@ -8,18 +9,18 @@ const cloudinary = require('cloudinary')
 
 var salt = bcrypt.genSaltSync(10);
 
-module.exports.index = async function(req, res, next) {
+module.exports.index = async function (req, res, next) {
     try {
-        var Housewife = await Housewife.find()
-        res.json(Housewife);
+        var housewife = await Housewife.find()
+        res.json(housewife);
     } catch (err) {
         next(err.message)
     }
 }
 
-module.exports.login = function(req, res) {
+module.exports.login = function (req, res) {
 
-    Housewife.findOne({ email: req.body.email }, function(err, user) {
+    Housewife.findOne({ email: req.body.email }, function (err, user) {
         if (err) return res.status(500).send('Error on the server.');
         if (!user) return res.status(404).send('No user found.');
 
@@ -39,11 +40,11 @@ module.exports.login = function(req, res) {
 
 };
 
-module.exports.logout = function(req, res) {
+module.exports.logout = function (req, res) {
     res.status(200).send({ auth: false, token: null });
 };
 
-module.exports.register = async function(req, res, next) {
+module.exports.register = async function (req, res, next) {
     try {
         const result = await cloudinary.v2.uploader.upload(req.file.path)
         req.body.avatar = result.url;
@@ -57,16 +58,16 @@ module.exports.register = async function(req, res, next) {
 
 };
 
-module.exports.me = function(req, res, next) {
+module.exports.me = function (req, res, next) {
 
-    Housewife.findById(req.userId, { password: 0 }, function(err, Housewife) {
+    Housewife.findById(req.userId, { password: 0 }, function (err, Housewife) {
         if (err) return res.status(500).send("There was a problem finding the user.");
         if (!Housewife) return res.status(404).send("No user found.");
         res.status(200).send(Housewife);
     })
 };
 
-module.exports.update = async function(req, res, next) {
+module.exports.update = async function (req, res, next) {
     try {
         const result = await cloudinary.v2.uploader.upload(req.file.path)
         req.body.avatar = result.url;
@@ -89,7 +90,20 @@ module.exports.update = async function(req, res, next) {
     }
 }
 
-module.exports.delete = async function(req, res, next) {
+module.exports.check = async function (req, res, next) {
+    try {
+        var housewife = await Housewife.updateOne({ _id: req.params.id }, {
+            $set: {
+                isCkeck: true
+            }
+        });
+        res.json({ "message": "Success" });
+
+    } catch (err) {
+        next(err.message)
+    }
+}
+module.exports.delete = async function (req, res, next) {
     try {
         var Housewife = await Housewife.deleteOne({ '_id': req.params.id })
         res.send(Housewife);

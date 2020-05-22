@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 
 var date = require('../autoCreate/date')
-
+var code = require('../autoCreate/code')
 var userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -33,6 +33,10 @@ var userSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'housewife', 'admin'],
         default: 'user'
+    },
+    isCkeck: {
+        type: Boolean,
+        default: false
     }
 });
 var User = mongoose.model('User', userSchema, 'users');

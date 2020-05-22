@@ -8,7 +8,7 @@ router.post('/create', controller.create);
 
 router.patch('/update', controller.update);
 
-router.post('/delete', controller.register);
+router.post('/delete', controller.delete);
 
 
 module.exports = router;

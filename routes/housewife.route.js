@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 var multer = require('multer')
-var upload = multer({})
+var upload = multer({ dest: 'assets/uploads/' })
 var controller = require('../controller/housewife.controller')
 
 var validate = require('../validate/housewife.validate')
@@ -25,13 +25,16 @@ router.get('/me', VerifyToken, controller.me)
 
 
 
-router.patch('/update',
+router.patch('/update/:id',
     upload.single('avatar'),
     VerifyToken,
     validate.checkCreate,
     controller.update
 )
-
+router.patch('/check/:id',
+    // VerifyToken,
+    controller.check
+)
 router.delete('/delete/:id',
     VerifyAdmin,
     controller.delete

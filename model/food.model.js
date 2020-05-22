@@ -13,6 +13,9 @@ var foodSchema = new mongoose.Schema({
         type: String,
         required: [true, 'image is required']
     },
+    image_id: {
+        type: String
+    },
     housewife_name: {
         type: String,
         required: [true, 'housewife_name is required']
@@ -20,6 +23,14 @@ var foodSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: [true, 'price is required']
+    },
+    name: {
+        type: String,
+        required: [true, 'name is required']
+    },
+    isCkeck: {
+        type: Boolean,
+        default: false
     }
 });
 var Food = mongoose.model('Food', foodSchema, 'foods');

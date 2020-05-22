@@ -5,7 +5,7 @@ var checkemail = email => {
     return re.test(email);
 }
 
-module.exports.checkCreate = function(req, res, next) {
+module.exports.checkCreate = function (req, res, next) {
     var errors = [];
     if (!req.body.name) {
         errors.push('Name is require');
@@ -18,15 +18,17 @@ module.exports.checkCreate = function(req, res, next) {
     }
     if (!req.body.phone) {
         errors.push('Phone is require');
+    } else {
+        if (req.body.phone.length < 6 || req.body.phone.length > 12) {
+            errors.push('Phone is not corect');
+        }
     }
     if (!req.body.password) {
         errors.push('Password is require');
-    }
-    if (req.body.phone.length < 6 || req.body.name.length > 12) {
-        errors.push('Phone is not corect');
-    }
-    if (req.body.password.length < 6 || req.body.password.length > 32) {
-        errors.push('Password is not corect');
+    } else {
+        if (req.body.password.length < 6 || req.body.password.length > 32) {
+            errors.push('Password is not corect');
+        }
     }
     if (!checkemail(req.body.email)) {
         errors.push('Email is not corect');
@@ -43,7 +45,7 @@ module.exports.checkCreate = function(req, res, next) {
 
 var checkExist = id => {
     var result;
-    var user = User.count({ _id: id }, function(err, count) {
+    var user = User.count({ _id: id }, function (err, count) {
         if (err) {
             result = 0;
         } else {
@@ -53,7 +55,7 @@ var checkExist = id => {
     return result;
 }
 
-module.exports.checkTrueFalse = function(req, res, next) {
+module.exports.checkTrueFalse = function (req, res, next) {
     var errors = [];
     if (this.checkExist(req.params.id) = 0) {
         errors.push("User do not exist");

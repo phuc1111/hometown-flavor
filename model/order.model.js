@@ -11,7 +11,7 @@ var orderSchema = new mongoose.Schema({
         type: String,
         required: [true, 'date_getOrder is required']
     },
-    menu_id: {
+    food_id: {
         type: String,
         required: [true, 'menu_id is required']
     },

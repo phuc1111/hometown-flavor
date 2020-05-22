@@ -17,7 +17,7 @@ var housewifeSchema = new mongoose.Schema({
     },
     avatar: String,
     phone: {
-        type: String,
+        type: Number,
         required: [true, 'Phone is required']
     },
     location: {
