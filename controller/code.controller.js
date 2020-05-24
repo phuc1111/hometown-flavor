@@ -1,7 +1,7 @@
 var Code = require('../model/code.model')
 
 
-module.exports.getCode = async function (req, res, next) {
+module.exports.getCode = async function(req, res, next) {
     try {
         var code = await Code.find({ phone: req.params.phone });
         console.log("get code running" + code)
@@ -12,4 +12,3 @@ module.exports.getCode = async function (req, res, next) {
         next(err.message);
     }
 };
-

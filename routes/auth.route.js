@@ -1,4 +1,3 @@
-
 var express = require('express');
 var router = express.Router();
 
@@ -22,9 +21,9 @@ router.get('/me', VerifyUser, controller.me);
 
 router.patch('/check/:code', VerifyUser, controller.check);
 
-router.post('/requirecode/:phone',
+router.get('/requirecode/:phone',
     verifyToken,
-    codeController.getCode,
+    // codeController.getCode,
     controller.sendCode
 );
 
