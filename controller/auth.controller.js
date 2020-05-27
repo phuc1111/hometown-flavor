@@ -141,7 +141,6 @@ module.exports.forgotPassword = async function (req, res, next) {
 };
 
 module.exports.changepassword = async function (req, res, next) {
-
     try {
         var user = User.updateOne({ phone: req.params.phone, password: req.body.password }, {
             $set: {
