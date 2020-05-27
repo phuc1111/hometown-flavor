@@ -35,6 +35,7 @@ module.exports.login = function (req, res) {
         // return the information including token as JSON
         res.status(200).send(
             {
+                users: user,
                 auth: true,
                 token: token,
                 expiresIn: 3600,
@@ -61,7 +62,6 @@ module.exports.register = function (req, res, next) {
                 from: '+12565888023' // From a valid Twilio number
             })
                 .then((message) => {
-                    console.log(message);
                     var response = {
                         message: "Đăng ký thành công",
                         phone: user.phone,
@@ -71,7 +71,6 @@ module.exports.register = function (req, res, next) {
                     res.status(200).send(response);
                 })
                 .catch(err => {
-                    console.log(err)
                     next(err)
                 });
         })
@@ -110,9 +109,10 @@ module.exports.check = async function (req, res, next) {
 
 module.exports.delete = async function (req, res, next) {
     try {
+        console.log(req.userId);
         await cloudinary.v2.uploader.destroy(req.body.image_id);
         var user = await Users.deleteOne({ '_id': req.userId });
-        res.send({ "message": "Xóa user thành công" });
+        res.send({ "message": "Xóa user thành công", user: user });
     } catch (err) {
         next(err.message)
     }
@@ -125,7 +125,8 @@ module.exports.forgotPassword = async function (req, res, next) {
         console.log(newPassword);
         var user = await Users.updateOne({ phone: req.params.phone }, {
             $set: {
-                password: newPassword
+                password: newPassword,
+                isCkeck: false
             }
         });
 
@@ -142,9 +143,10 @@ module.exports.forgotPassword = async function (req, res, next) {
 
 module.exports.changepassword = async function (req, res, next) {
     try {
-        var user = Users.updateOne({ phone: req.params.phone, password: req.body.password }, {
+        var user = Users.updateOne({ _id: req.userId }, {
             $set: {
-                password: bcrypt.hashSync(req.body.newPassword, salt)
+                password: bcrypt.hashSync(req.body.newPassword, salt),
+                isCkeck: true
             }
         });
         res.status(200).send({ "message": "Đổi mật khẩu thành công" });
@@ -152,3 +154,12 @@ module.exports.changepassword = async function (req, res, next) {
         next(error);
     }
 }
+
+// module.exports.changepassword = function (req, res, next) {
+//     Users.updateOne({ _id: req.userId, password: req.body.password }, {
+//         $set: {
+//             password: bcrypt.hashSync(req.body.newPassword, salt)
+//         }
+//     });
+//     res.status(200).send({ "message": "Đổi mật khẩu thành công" });
+// }

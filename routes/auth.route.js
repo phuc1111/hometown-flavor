@@ -22,6 +22,6 @@ router.delete('/delete', verifyToken, controller.delete);
 
 router.post('/forgotpassword/:phone', controller.forgotPassword);
 
-router.patch('/changepassword/:phone', controller.changepassword);
+router.patch('/changepassword/:phone', verifyToken, controller.changepassword);
 
 module.exports = router;
