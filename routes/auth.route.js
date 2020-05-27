@@ -3,7 +3,6 @@ var router = express.Router();
 
 var controller = require('../controller/auth.controller')
 
-var VerifyAdmin = require('../middleware/checkAdmin')
 var verifyToken = require('../controller/VerifyToken')
 
 var multer = require('multer')
@@ -24,4 +23,5 @@ router.delete('/delete', verifyToken, controller.delete);
 router.post('/forgotpassword/:phone', controller.forgotPassword);
 
 router.patch('/changepassword/:phone', controller.changepassword);
+
 module.exports = router;

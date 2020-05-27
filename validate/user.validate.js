@@ -1,4 +1,4 @@
-var User = require('../model/user.model')
+
 
 var checkemail = email => {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -41,31 +41,4 @@ module.exports.checkCreate = function (req, res, next) {
         return;
     }
     next()
-}
-
-var checkExist = id => {
-    var result;
-    var user = User.count({ _id: id }, function (err, count) {
-        if (err) {
-            result = 0;
-        } else {
-            result = count;
-        }
-    });
-    return result;
-}
-
-module.exports.checkTrueFalse = function (req, res, next) {
-    var errors = [];
-    if (this.checkExist(req.params.id) = 0) {
-        errors.push("User do not exist");
-    }
-    if (errors.length) {
-
-        res.json(errors)
-        return;
-    }
-    console.log(errors);
-    next()
-
 }

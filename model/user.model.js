@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
 
 var date = require('../autoCreate/date')
 var code = require('../autoCreate/code')
+delete mongoose.connection.models['User'];
 var userSchema = new mongoose.Schema({
     password: {
         type: String,

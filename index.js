@@ -13,7 +13,6 @@ const send = require('./validate/sms.validate')
 
 
 const housewifeRoutes = require("./routes/housewife.route");
-const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
 const foodRoutes = require("./routes/food.route");
 const orderRoutes = require("./routes/order.route");
@@ -33,7 +32,6 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(express.static("assets"));
 
 app.get("/api/", (req, res) => res.send("index"));
-app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/housewifes", housewifeRoutes);
 app.use("/api/foods", foodRoutes);
