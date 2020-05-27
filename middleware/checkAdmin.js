@@ -1,4 +1,4 @@
-var Admin = require('../model/Admin.model')
+var User = require('../model/User.model')
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config'); // get our config file
 
@@ -14,7 +14,7 @@ function checkUser(req, res, next) {
         if (err) {
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         }
-        Admin.findById(decoded.id, { password: 0 }, function (err, user) {
+        User.findById(decoded.id, { password: 0 }, function (err, user) {
             if (user.role != 'admin') { //check admin
                 return res.status(500).send('just admin can do it');
             }
