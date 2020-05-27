@@ -1,13 +1,12 @@
-var express = require('express');
-var router = express.Router();
-var controller = require('../controller/admin.controller')
-var VerifyAdmin = require('../middleware/checkUser')
+// var express = require('express');
+// var router = express.Router();
+// var controller = require('../controller/admin.controller')
 
-router.post('/login', controller.login);
+// router.post('/login', controller.login);
 
-router.get('/logout', controller.logout);
+// router.get('/logout', controller.logout);
 
-router.post('/register', upload.single('avatar'), controller.register);
+// router.post('/register', controller.register);
 
 
-module.exports = router;
+// module.exports = router;

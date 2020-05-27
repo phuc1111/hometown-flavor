@@ -7,13 +7,14 @@ var controller = require('../controller/housewife.controller')
 
 var validate = require('../validate/housewife.validate')
 var VerifyToken = require('../controller/VerifyToken')
-var VerifyAdmin = require('../middleware/checkUser')
+var VerifyAdmin = require('../middleware/checkAdmin')
 
 router.get('/', controller.index);
 
 router.post('/login', controller.login)
 
 router.get('/logout', controller.logout);
+router.get('/forgotpassword/:phone', controller.forgotPassword);
 
 router.post('/register',
     upload.single('avatar'),

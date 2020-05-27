@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../controller/food.controller')
 var validate = require('../validate/food.validate')
-var VerifyAdmin = require('../middleware/checkUser')
+var VerifyAdmin = require('../middleware/checkAdmin')
 var VerifyHousewife = require('../middleware/checkHousewife')
 var checkNotUser = require('../middleware/checkNotUser')
 
@@ -13,7 +13,7 @@ router.get('/', controller.getFoods);
 
 router.post('/create',
     // VerifyHousewife,
-    // upload.single('image'),
+    upload.single('image'),
     validate.checkCreate,
     controller.create
 );

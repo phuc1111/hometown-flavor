@@ -1,5 +1,5 @@
 var Housewife = require('../model/housewife.model')
-var Admin = require('../model/admin.model')
+// var Admin = require('../model/admin.model')
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config'); // get our config file
 

@@ -1,5 +1,5 @@
 var mongoose = require('mongoose')
-
+var date = require('../autoCreate/date')
 var foodSchema = new mongoose.Schema({
     foods: {
         type: Array,
@@ -31,6 +31,10 @@ var foodSchema = new mongoose.Schema({
     isCkeck: {
         type: Boolean,
         default: false
+    },
+    date: {
+        type: String,
+        default: date.getNextDay
     }
 });
 var Food = mongoose.model('Food', foodSchema, 'foods');

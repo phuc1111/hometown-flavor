@@ -3,11 +3,6 @@ var mongoose = require('mongoose')
 var date = require('../autoCreate/date')
 var code = require('../autoCreate/code')
 var userSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: [true, 'Email is required'],
-        unique: [true, 'Email is unique']
-    },
     password: {
         type: String,
         required: [true, 'Password is required']
@@ -19,6 +14,7 @@ var userSchema = new mongoose.Schema({
     avatar: String,
     phone: {
         type: String,
+        unique: [true, 'Phone is unique'],
         required: [true, 'Phone is required']
     },
     address: {
@@ -31,13 +27,22 @@ var userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'housewife', 'admin'],
+        enum: ['user', 'admin'],
         default: 'user'
     },
     isCkeck: {
         type: Boolean,
         default: false
-    }
+    },
+    code: {
+        type: Number,
+        default: code.createCode
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required']
+    },
+    image_id: String
 });
 var User = mongoose.model('User', userSchema, 'users');
 module.exports = User;

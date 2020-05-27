@@ -1,19 +1,7 @@
-
 var Order = require('../model/order.model')
-var config = require('../config');
-require('../middleware/cloundinary')
-
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var bcrypt = require('bcryptjs');
-const cloudinary = require('cloudinary')
-
-var salt = bcrypt.genSaltSync(10);
-
 
 module.exports.create = async function (req, res, next) {
     try {
-
-        console.log(req.body)
         var order = await Order.create(req.body);
         res.status(200).send(order);
     } catch (err) {

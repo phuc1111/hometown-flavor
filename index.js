@@ -17,6 +17,8 @@ const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
 const foodRoutes = require("./routes/food.route");
 const orderRoutes = require("./routes/order.route");
+const commentRoutes = require("./routes/comment.route");
+
 
 const cookieParser = require("cookie-parser");
 
@@ -36,6 +38,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/housewifes", housewifeRoutes);
 app.use("/api/foods", foodRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/comments", commentRoutes);
+// app.use("/api/orders", orderRoutes);
+
 
 app.use("/api/sendsms", send.sendSms);
 app.listen(port, () =>

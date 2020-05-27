@@ -2,12 +2,19 @@
 var Housewife = require('../model/housewife.model')
 var config = require('../config');
 require('../middleware/cloundinary')
-
+var code = require('../autoCreate/code')
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var bcrypt = require('bcryptjs');
 const cloudinary = require('cloudinary')
 
 var salt = bcrypt.genSaltSync(10);
+
+var twilio = require('twilio');
+
+var accountSid = 'ACe22d535911002bdeda7e25db8a79c2da'; // Your Account SID from www.twilio.com/console
+var authToken = 'b95d78cc754edb3f81949fae15ad465b';   // Your Auth Token from www.twilio.com/console
+
+var client = new twilio(accountSid, authToken);
 
 module.exports.index = async function (req, res, next) {
     try {
@@ -20,7 +27,7 @@ module.exports.index = async function (req, res, next) {
 
 module.exports.login = function (req, res) {
 
-    Housewife.findOne({ email: req.body.email }, function (err, user) {
+    Housewife.findOne({ phone: req.body.phone }, function (err, user) {
         if (err) return res.status(500).send('Error on the server.');
         if (!user) return res.status(404).send('No user found.');
 
@@ -31,7 +38,7 @@ module.exports.login = function (req, res) {
         // if user is found and password is valid
         // create a token
         var token = jwt.sign({ id: user._id }, config.secret, {
-            expiresIn: 3600 // expires in 1 hours
+            expiresIn: 7200 // expires in 2 hours
         });
 
         // return the information including token as JSON
@@ -103,6 +110,27 @@ module.exports.check = async function (req, res, next) {
         next(err.message)
     }
 }
+
+module.exports.forgotPassword = function (req, res, next) {
+    var newPassword = code.createCode;
+    User.updateOne({ phone: req.params.phone }, {
+        $set: {
+            password: bcrypt.hashSync(newPassword, salt)
+        }
+    }).then(data => {
+        client.messages.create({
+            body: newPassword,
+            to: '+' + user.phone,  // Text this number
+            from: '+12565888023' // From a valid Twilio number
+        }).then(() => {
+            res.send({ "message": "Vui lòng đổi mật khẩu" });
+        })
+    }).catch(err => {
+        next(err)
+    });
+
+};
+
 module.exports.delete = async function (req, res, next) {
     try {
         var Housewife = await Housewife.deleteOne({ '_id': req.params.id })

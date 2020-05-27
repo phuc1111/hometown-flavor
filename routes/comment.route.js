@@ -1,14 +1,26 @@
-var express = require('express');
-var router = express.Router();
-var controller = require('../controller/admin.controller')
+var express = require('express')
+var router = express.Router()
+var controller = require('../controller/comment.controller')
 
-router.get('/:id_food', controller.getComment);
+var VerifyToken = require('../controller/VerifyToken')
+var validate = require('../validate/comment.validate')
 
-router.post('/create', controller.create);
+router.get('/', VerifyToken, controller.getComment);
 
-router.patch('/update', controller.update);
+router.post('/create',
+    VerifyToken,
+    validate.checkCreate,
+    controller.create
+);
 
-router.post('/delete', controller.delete);
+router.patch('/check/:id', controller.checkOk);
+router.patch('/update/:id',
+    VerifyToken,
+    validate.checkCreate,
+    controller.update
+);
+
+router.delete('/delete/:id', VerifyToken, controller.delete);
 
 
 module.exports = router;

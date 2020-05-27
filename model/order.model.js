@@ -3,27 +3,36 @@ var mongoose = require('mongoose')
 var date = require('../autoCreate/date')
 
 var orderSchema = new mongoose.Schema({
+    user_id: {
+        type: String,
+        required: [true, 'user_id is required']
+    },
     date_order: {
         type: String,
         default: date.getCurrentDay
     },
     date_getOrder: {
         type: String,
-        required: [true, 'date_getOrder is required']
+        default: date.getNextDay
     },
     food_id: {
         type: String,
-        required: [true, 'menu_id is required']
+        required: [true, 'Food is required']
     },
     status: {
         type: String,
-        enum: ['ordered', 'confirmed', 'cooked', 'shipping', 'done'],
+        enum: ['ordered', 'confirmed', 'done'],
         default: 'ordered'
     },
     image: {
         type: String,
         required: [true, 'image is required']
+    },
+    number: {
+        type: Number,
+        required: [true, 'Number is required']
     }
+
 });
 var Order = mongoose.model('Order', orderSchema, 'orders');
 module.exports = Order;

@@ -1,44 +1,30 @@
-var User = require('../model/user.model')
-var Code = require('../model/code.model')
-
-const Nexmo = require('nexmo')
-const nexmo = new Nexmo({
-    apiKey: '56b7f124',
-    apiSecret: 'c7qAnaYma1oqZ60c'
-});
-
+var User = require('../model/user.model');
+var code = require('../autoCreate/code');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var bcrypt = require('bcryptjs');
 var config = require('../config');
 const cloudinary = require('cloudinary')
 require('../middleware/cloundinary')
 var salt = bcrypt.genSaltSync(10);
+//twilio 
+var twilio = require('twilio');
 
-function sendSMS(fromPhone, toPhone, content, callback) {
-    nexmo.message.sendSms(fromPhone, toPhone, content, {
-        type: "unicode"
-    }, (err, responseData) => {
-        if (err) {
-            console.log("error:", +err);
-        } else {
-            if (responseData.messages[0]['status'] === "0") {
-                callback("Message sent successfully.")
-            } else {
-                callback(`Message failed with error: ${responseData.messages[0]['error-text']}`);
-            }
-        }
-    })
-}
+var accountSid = 'ACe22d535911002bdeda7e25db8a79c2da'; // Your Account SID from www.twilio.com/console
+var authToken = 'b95d78cc754edb3f81949fae15ad465b';   // Your Auth Token from www.twilio.com/console
+
+var client = new twilio(accountSid, authToken);
+
+
 
 module.exports.login = function (req, res) {
 
-    User.findOne({ email: req.body.email }, function (err, user) {
-        if (err) return res.status(500).send('Error on the server.');
-        if (!user) return res.status(404).send('No user found.');
+    User.findOne({ phone: req.body.phone }, function (err, user) {
+        if (err) return res.status(500).send('Server hiện đang bảo trì');
+        if (!user) return res.status(404).send('Không tìm thấy user');
 
         // check if the password is valid
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null, message: "Sai mật khẩu" });
 
         // if user is found and password is valid
         // create a token
@@ -47,7 +33,14 @@ module.exports.login = function (req, res) {
         });
 
         // return the information including token as JSON
-        res.status(200).send({ auth: true, token: token });
+        res.status(200).send(
+            {
+                auth: true,
+                token: token,
+                expiresIn: 3600,
+                role: 'user'
+            }
+        );
     });
 
 };
@@ -56,26 +49,46 @@ module.exports.logout = function (req, res) {
     res.status(200).send({ auth: false, token: null });
 };
 
-module.exports.register = async function (req, res, next) {
-    try {
-        const result = await cloudinary.v2.uploader.upload(req.file.path)
-        req.body.avatar = result.url;
+module.exports.register = function (req, res, next) {
+    cloudinary.v2.uploader.upload(req.file.path).then(data => {
+        req.body.avatar = data.url;
         req.body.password = bcrypt.hashSync(req.body.password, salt);
-        var user = await User.create(req.body);
-        var code = await Code.create({ phone: req.body.phone });
-        res.status(200).send(user);
-    } catch (err) {
-        console.log(err);
-        next(err.message)
-    }
-
+        req.body.image_id = data.public_id;
+        User.create(req.body).then(user => {
+            client.messages.create({
+                body: user.code,
+                to: '+' + user.phone,  // Text this number
+                from: '+12565888023' // From a valid Twilio number
+            })
+                .then((message) => {
+                    console.log(message);
+                    var response = {
+                        message: "Đăng ký thành công",
+                        phone: user.phone,
+                        email: user.email,
+                        address: user.address
+                    }
+                    res.status(200).send(response);
+                })
+                .catch(err => {
+                    console.log(err)
+                    next(err)
+                });
+        })
+            .catch(err => {
+                next(err.message);
+            })
+    })
+        .catch(err => {
+            next(err.message)
+        })
 };
 
 module.exports.me = function (req, res, next) {
 
     User.findById(req.userId, { password: 0 }, function (err, user) {
-        if (err) return res.status(500).send("There was a problem finding the user.");
-        if (!user) return res.status(404).send("No user found.");
+        if (err) return res.status(500).send("User không tồn tại");
+        if (!user) return res.status(404).send("Không tìm thấy user");
         res.status(200).send(user);
     })
 };
@@ -83,37 +96,60 @@ module.exports.me = function (req, res, next) {
 module.exports.check = async function (req, res, next) {
     // console.log(req.params.code)
     try {
-        var user = await User.updateOne({ _id: req.userId }, {
+        var user = await User.updateOne({ code: req.params.code }, {
             $set: {
-                ischeck: true
+                isCkeck: true
             }
         });
-        res.json(req.body);
+        res.status(200).json({ "message": "Xác nhận thành công" });
 
     } catch (err) {
         next(err.message)
     }
 }
 
-module.exports.sendCode = function (req, res, next) {
+module.exports.delete = async function (req, res, next) {
     try {
-        console.log("send code running" + req.code);
-    } catch (error) {
+        await cloudinary.v2.uploader.destroy(req.body.image_id);
+        var user = await User.deleteOne({ '_id': req.userId });
+        res.send({ "message": "Xóa user thành công" });
+    } catch (err) {
         next(err.message)
     }
+}
 
-    // await sendSMS('PHUC', req.code.phone, req.code.code, function (responseData) {
-    //     // console.log(responseData);
-    //     res.send(responseData);
-    // });
+module.exports.forgotPassword = async function (req, res, next) {
+    try {
+        var pass = Math.floor(Math.random() * 1000000);
+        newPassword = bcrypt.hashSync(pass.toString(), salt);
+        console.log(newPassword);
+        var user = await User.updateOne({ phone: req.params.phone }, {
+            $set: {
+                password: newPassword
+            }
+        });
+
+        var sms = client.messages.create({
+            body: pass,
+            to: '+' + req.params.phone,  // Text this number
+            from: '+12565888023' // From a valid Twilio number
+        });
+        res.status(200).send({ "message": "Đã gửi mật khẩu mới về điện thoại" });
+    } catch (error) {
+        next(error)
+    }
 };
 
+module.exports.changepassword = async function (req, res, next) {
 
-// router.post("/sendsms", function (req, res) {
-//     let fromPhone = 'HVQN';
-//     let toPhone = '84523175762';
-//     sendSMS(fromPhone, toPhone, '1235977', function (responseData) {
-//         console.log(responseData);
-//         res.send(responseData);
-//     });
-// })
+    try {
+        var user = User.updateOne({ phone: req.params.phone, password: req.body.password }, {
+            $set: {
+                password: bcrypt.hashSync(req.body.newPassword, salt)
+            }
+        });
+        res.status(200).send({ "message": "Đổi mật khẩu thành công" });
+    } catch (error) {
+        next(error);
+    }
+}
