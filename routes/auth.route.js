@@ -4,7 +4,6 @@ var router = express.Router();
 var controller = require('../controller/auth.controller')
 
 var verifyToken = require('../controller/VerifyToken')
-
 var multer = require('multer')
 var upload = multer({ dest: 'assets/uploads/' })
 

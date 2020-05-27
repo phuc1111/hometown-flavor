@@ -16,7 +16,7 @@ function checkUser(req, res, next) {
         }
         User.findById(decoded.id, { password: 0 }, function (err, user) {
             if (user.role != 'admin') { //check admin
-                return res.status(500).send('just admin can do it');
+                return res.status(401).send({ message: "just admin can do it" });
             }
             req.userId = decoded.id;
             next();

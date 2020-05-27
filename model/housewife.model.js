@@ -34,7 +34,7 @@ var housewifeSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'housewife', 'admin'],
+        enum: ['user', 'housewife'],
         default: 'housewife'
     }
 

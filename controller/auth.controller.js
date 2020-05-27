@@ -93,7 +93,6 @@ module.exports.me = function (req, res, next) {
 };
 
 module.exports.check = async function (req, res, next) {
-    // console.log(req.params.code)
     try {
         var user = await Users.updateOne({ code: req.params.code }, {
             $set: {
@@ -109,7 +108,6 @@ module.exports.check = async function (req, res, next) {
 
 module.exports.delete = async function (req, res, next) {
     try {
-        console.log(req.userId);
         await cloudinary.v2.uploader.destroy(req.body.image_id);
         var user = await Users.deleteOne({ '_id': req.userId });
         res.send({ "message": "Xóa user thành công", user: user });
@@ -122,7 +120,6 @@ module.exports.forgotPassword = async function (req, res, next) {
     try {
         var pass = Math.floor(Math.random() * 1000000);
         newPassword = bcrypt.hashSync(pass.toString(), salt);
-        console.log(newPassword);
         var user = await Users.updateOne({ phone: req.params.phone }, {
             $set: {
                 password: newPassword,
@@ -131,7 +128,7 @@ module.exports.forgotPassword = async function (req, res, next) {
         });
 
         var sms = client.messages.create({
-            body: pass,
+            body: "Mật khẩu mới là: " + pass,
             to: '+' + req.params.phone,  // Text this number
             from: '+12565888023' // From a valid Twilio number
         });
@@ -154,12 +151,3 @@ module.exports.changepassword = async function (req, res, next) {
         next(error);
     }
 }
-
-// module.exports.changepassword = function (req, res, next) {
-//     Users.updateOne({ _id: req.userId, password: req.body.password }, {
-//         $set: {
-//             password: bcrypt.hashSync(req.body.newPassword, salt)
-//         }
-//     });
-//     res.status(200).send({ "message": "Đổi mật khẩu thành công" });
-// }
