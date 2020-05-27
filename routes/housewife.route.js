@@ -1,17 +1,17 @@
-var express = require('express')
-var router = express.Router()
+var express = require('express');
+var router = express.Router();
 
-var multer = require('multer')
-var upload = multer({ dest: 'assets/uploads/' })
-var controller = require('../controller/housewife.controller')
+var multer = require('multer');
+var upload = multer({ dest: 'assets/uploads/' });
+var controller = require('../controller/housewife.controller');
 
-var validate = require('../validate/housewife.validate')
-var VerifyToken = require('../controller/VerifyToken')
-var VerifyAdmin = require('../middleware/checkAdmin')
+var validate = require('../validate/housewife.validate');
+var VerifyToken = require('../controller/VerifyToken');
+var VerifyAdmin = require('../middleware/checkAdmin');
 
 router.get('/', controller.index);
 
-router.post('/login', controller.login)
+router.post('/login', controller.login);
 
 router.get('/logout', controller.logout);
 router.get('/forgotpassword/:phone', controller.forgotPassword);

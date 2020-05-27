@@ -9,7 +9,7 @@ require("./middleware/cloundinary");
 var mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URL);
 
-const send = require('./validate/sms.validate')
+const send = require('./validate/sms.validate');
 
 
 const housewifeRoutes = require("./routes/housewife.route");
@@ -37,10 +37,7 @@ app.use("/api/housewifes", housewifeRoutes);
 app.use("/api/foods", foodRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/comments", commentRoutes);
-// app.use("/api/orders", orderRoutes);
 
-
-app.use("/api/sendsms", send.sendSms);
 app.listen(port, () =>
     console.log(`Example app listening at http://localhost:${port}`)
 );
