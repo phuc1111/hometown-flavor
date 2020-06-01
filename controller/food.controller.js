@@ -12,6 +12,7 @@ var salt = bcrypt.genSaltSync(10);
 module.exports.create = async function (req, res, next) {
     try {
         //add image to cloudinary
+        console.log(req.file);
         const result = await cloudinary.v2.uploader.upload(req.file.path)
         req.body.image = result.url;
         req.body.image_id = result.public_id;
@@ -37,7 +38,8 @@ module.exports.getFoods = async function (req, res, next) {
 
 module.exports.delete = async function (req, res, next) {
     try {
-        await cloudinary.v2.uploader.destroy(req.body.image_id);
+        console.log(req.body);
+        await cloudinary.v2.uploader.destroy(req.params.image_id);
         var food = await Food.deleteOne({ '_id': req.params.id });
         res.send({ "message": "Xóa thành công" });
     } catch (err) {

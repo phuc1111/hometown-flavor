@@ -1,3 +1,4 @@
+
 var express = require('express');
 var router = express.Router();
 
@@ -22,5 +23,7 @@ router.delete('/delete', verifyToken, controller.delete);
 router.post('/forgotpassword/:phone', controller.forgotPassword);
 
 router.patch('/changepassword/:phone', verifyToken, controller.changepassword);
+
+router.patch('/changeavatar', upload.single('avatar'), verifyToken, controller.changeAvatar);
 
 module.exports = router;

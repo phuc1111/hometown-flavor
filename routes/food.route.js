@@ -12,19 +12,19 @@ var upload = multer({ dest: 'assets/uploads/' })
 router.get('/', controller.getFoods);
 
 router.post('/create',
-    VerifyHousewife,
+    // VerifyHousewife,
     upload.single('image'),
     validate.checkCreate,
     controller.create
 );
 
 router.patch('/update/:id',
-    VerifyHousewife,
+    // VerifyHousewife,
     controller.checkOk
 );
 
-router.delete('/delete/:id',
-    VerifyHousewife,
+router.delete('/delete/:id/:image_id',
+    // VerifyHousewife,
     controller.delete
 )
 

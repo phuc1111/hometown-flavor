@@ -151,3 +151,19 @@ module.exports.changepassword = async function (req, res, next) {
         next(error);
     }
 }
+module.exports.changeAvatar = function (req, res, next) {
+    cloudinary.v2.uploader.upload(req.file.path).then(data => {
+        Users.updateOne({ _id: req.userId }, {
+            $set: {
+                avatar: data.url
+            }
+        });
+        res.status(200).send({
+            message: "Đổi avatar thành công",
+            avatar: data.url
+        })
+    }).catch(err => {
+        next(err);
+    })
+
+}
