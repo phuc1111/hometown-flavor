@@ -38,8 +38,7 @@ module.exports.login = function (req, res) {
                 users: user,
                 auth: true,
                 token: token,
-                expiresIn: 3600,
-                role: 'user'
+                expiresIn: 3600
             }
         );
     });
@@ -56,23 +55,24 @@ module.exports.register = function (req, res, next) {
         req.body.password = bcrypt.hashSync(req.body.password, salt);
         req.body.image_id = data.public_id;
         Users.create(req.body).then(user => {
-            client.messages.create({
-                body: "OTP của bạn là " + user.code,
-                to: '+' + user.phone,  // Text this number
-                from: '+12565888023' // From a valid Twilio number
-            })
-                .then((message) => {
-                    var response = {
-                        message: "Đăng ký thành công",
-                        phone: user.phone,
-                        email: user.email,
-                        address: user.address
-                    }
-                    res.status(200).send(response);
-                })
-                .catch(err => {
-                    next(err)
-                });
+            res.status(200).send(user);
+            // client.messages.create({
+            //     body: "OTP của bạn là " + user.code,
+            //     to: '+' + user.phone,  // Text this number
+            //     from: '+12565888023' // From a valid Twilio number
+            // })
+            //     .then((message) => {
+            //         var response = {
+            //             message: "Đăng ký thành công",
+            //             phone: user.phone,
+            //             email: user.email,
+            //             address: user.address
+            //         }
+            //         res.status(200).send(response);
+            //     })
+            //     .catch(err => {
+            //         next(err)
+            //     });
         })
             .catch(err => {
                 next(err.message);
