@@ -40,8 +40,7 @@ var userSchema = new mongoose.Schema({
         default: code.createCode
     },
     email: {
-        type: String,
-        required: [true, 'Email is required']
+        type: String
     },
     image_id: String
 });
