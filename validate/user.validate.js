@@ -37,7 +37,7 @@ module.exports.checkCreate = function (req, res, next) {
     //     errors.push('Avatar is not corect');
     // }
     if (errors.length) {
-        res.json(errors)
+        res.status(401).send(errors);
         return;
     }
     next()
