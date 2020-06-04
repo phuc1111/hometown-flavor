@@ -6,16 +6,21 @@ module.exports.create = async function (req, res, next) {
         req.user_id = req.userId;
         req.body.total = parseInt(food.price) * req.body.number;
         req.body.image = food.image;
-        Order.create(req.body).then(order => {
-            res.status(200).send({
-                message: "Order thành công",
-                orders: order,
-                foods: food
+        if (food.isCkeck == true) {
+            Order.create(req.body).then(order => {
+                res.status(200).send({
+                    message: "Order thành công",
+                    orders: order,
+                    foods: food
+                })
+            }).catch(err => {
+                next(err);
             })
-        }).catch(err => {
-            next(err);
-        })
-
+        } else {
+            res.status(401).send({
+                message: "Sản phẩm chưa được kiểm định"
+            })
+        }
     }).catch(err => {
         next(err);
     })
