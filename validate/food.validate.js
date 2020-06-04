@@ -8,6 +8,9 @@ module.exports.checkCreate = function (req, res, next) {
     if (!req.body.location) {
         errors.push('Location is require');
     }
+    if (!req.body.description) {
+        errors.push('description is require');
+    }
     if (!req.body.housewife_name) {
         errors.push('Housewife_name is require');
     }

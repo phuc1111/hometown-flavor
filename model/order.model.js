@@ -4,8 +4,7 @@ var date = require('../autoCreate/date')
 
 var orderSchema = new mongoose.Schema({
     user_id: {
-        type: String,
-        required: [true, 'user_id is required']
+        type: String
     },
     date_order: {
         type: String,
@@ -24,13 +23,12 @@ var orderSchema = new mongoose.Schema({
         enum: ['ordered', 'confirmed', 'done'],
         default: 'ordered'
     },
-    image: {
-        type: String,
-        required: [true, 'image is required']
-    },
     number: {
         type: Number,
         required: [true, 'Number is required']
+    },
+    total: {
+        type: Number
     }
 
 });

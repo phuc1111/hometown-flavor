@@ -35,6 +35,10 @@ var foodSchema = new mongoose.Schema({
     date: {
         type: String,
         default: date.getNextDay
+    },
+    description: {
+        type: String,
+        required: [true, 'description is required']
     }
 });
 var Food = mongoose.model('Food', foodSchema, 'foods');
