@@ -83,6 +83,18 @@ module.exports.register = function (req, res, next) {
         })
 };
 
+module.exports.signup = async function (req, res, next) {
+
+
+    try {
+        req.body.password = bcrypt.hashSync(req.body.password, salt);
+        var user = await Users.create(req.body);
+        res.status(200).send(user);
+    } catch (error) {
+        next(error)
+    }
+};
+
 module.exports.me = function (req, res, next) {
 
     Users.findById(req.userId, { password: 0 }, function (err, user) {

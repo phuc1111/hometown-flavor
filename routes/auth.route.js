@@ -14,6 +14,8 @@ router.get('/logout', controller.logout);
 
 router.post('/register', upload.single('avatar'), check.checkCreate, controller.register);
 
+router.post('/signup', check.checkSignup, controller.signup);
+
 router.get('/me', verifyToken, controller.me);
 
 router.patch('/check/:code', verifyToken, controller.check);
