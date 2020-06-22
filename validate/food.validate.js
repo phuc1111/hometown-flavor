@@ -8,6 +8,9 @@ module.exports.checkCreate = function (req, res, next) {
     if (!req.body.location) {
         errors.push('Location is require');
     }
+    if (!req.file) {
+        errors.push('image is require');
+    }
     if (!req.body.description) {
         errors.push('description is require');
     }

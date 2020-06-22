@@ -11,8 +11,7 @@ var salt = bcrypt.genSaltSync(10);
 
 module.exports.create = async function (req, res, next) {
     try {
-        //add image to cloudinary
-        console.log(req.file);
+
         const result = await cloudinary.v2.uploader.upload(req.file.path)
         req.body.image = result.url;
         req.body.image_id = result.public_id;
