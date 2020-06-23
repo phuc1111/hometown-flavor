@@ -1,7 +1,8 @@
 const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const options = {
     // List of files to be processed.
-    apis: ['./ice-cream/index.js', './cookies/index.js'],
+    apis: ['./routes/auth.route.js', './cookies/index.js'],
     // You can also set globs for your apis
     // e.g. './routes/*.js'
     basePath: '/',
@@ -13,6 +14,8 @@ const options = {
             version: '4.0.0',
         },
     },
+
 };
 const specs = swaggerJsdoc(options);
-export default specs;
+
+module.exports.specs;

@@ -3,7 +3,7 @@ var Food = require('../model/food.model')
 
 module.exports.create = async function (req, res, next) {
     Food.findById({ _id: req.body.food_id }).then(food => {
-        req.user_id = req.userId;
+        req.body.user_id = req.userId;
         req.body.total = parseInt(food.price) * req.body.number;
         req.body.image = food.image;
         if (food.isCkeck == true) {
@@ -47,6 +47,15 @@ module.exports.delete = async function (req, res, next) {
     try {
         var order = await Order.deleteOne({ '_id': req.params.id });
         res.send({ "message": "Delete success" });
+    } catch (err) {
+        next(err.message)
+    }
+}
+
+module.exports.getOrder = async function (req, res, next) {
+    try {
+        var order = await Order.find({ 'user_id': req.userId });
+        res.status(200).send(order);
     } catch (err) {
         next(err.message)
     }

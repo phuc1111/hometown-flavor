@@ -4,7 +4,7 @@ var controller = require('../controller/order.controller');
 var VerifyToken = require('../controller/VerifyToken')
 var validate = require('../validate/order.validate')
 
-// router.get('/getOrder', VerifyToken, controller.getOrder);
+router.get('/getOrder', VerifyToken, controller.getOrder);
 
 router.post('/create', VerifyToken, controller.create);
 

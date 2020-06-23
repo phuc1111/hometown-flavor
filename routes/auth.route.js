@@ -24,8 +24,13 @@ router.delete('/delete', verifyToken, controller.delete);
 
 router.post('/forgotpassword/:phone', controller.forgotPassword);
 
-router.patch('/changepassword/:phone', verifyToken, controller.changepassword);
+router.patch('/changepassword/:phone', check.checkChangPassword, verifyToken, controller.changepassword);
 
-router.patch('/changeavatar', upload.single('avatar'), verifyToken, controller.changeAvatar);
+router.patch('/changeavatar/:image_id',
+    check.checkChangAvatar,
+    upload.single('avatar'),
+    verifyToken,
+    controller.changeAvatar
+);
 
 module.exports = router;

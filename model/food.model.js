@@ -34,7 +34,7 @@ var foodSchema = new mongoose.Schema({
     },
     date: {
         type: String,
-        default: date.getNextDay
+        default: date.getCurrentDay
     },
     description: {
         type: String,

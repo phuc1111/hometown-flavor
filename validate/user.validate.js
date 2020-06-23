@@ -77,3 +77,36 @@ module.exports.checkSignup = function (req, res, next) {
     }
     next()
 }
+
+module.exports.checkChangAvatar = function (req, res, next) {
+    var errors = [];
+
+    if (!req.file) {
+        errors.push('Chưa chọn hình, vui lòng chọn hình');
+    }
+
+    if (errors.length) {
+        res.status(401).send(errors);
+        return;
+    }
+    next()
+}
+
+module.exports.checkChangPassword = function (req, res, next) {
+    var errors = [];
+
+    if (!req.body.newPassword) {
+        errors.push('Vui lòng cung cấp password mới');
+    }
+    if (!req.params.phone) {
+        errors.push('Chưa có số điện thoại');
+    }
+    if (!checkPhone(req.params.phone)) {
+        errors.push('Vui lòng cung cấp số điện thoại hợp lệ');
+    }
+    if (errors.length) {
+        res.status(401).send(errors);
+        return;
+    }
+    next()
+}

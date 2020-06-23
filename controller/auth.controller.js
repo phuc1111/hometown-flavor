@@ -83,19 +83,6 @@ module.exports.register = function (req, res, next) {
         })
 };
 
-// module.exports.signup = async function (req, res, next) {
-
-
-//     try {
-//         req.body.password = bcrypt.hashSync(req.body.password, salt);
-//         var user = await Users.create(req.body);
-//         res.status(200).send(user);
-//     } catch (error) {
-//         res.status(401).send(error);
-//         // next(error)
-//     }
-// };
-
 module.exports.signup = function (req, res, next) {
 
     req.body.password = bcrypt.hashSync(req.body.password, salt);
@@ -146,6 +133,41 @@ module.exports.delete = async function (req, res, next) {
     }
 }
 
+module.exports.changeAvatar = function (req, res, next) {
+    cloudinary.v2.uploader.destroy(req.params.image_id).then(() => {
+        cloudinary.v2.uploader.upload(req.file.path).then(data => {
+            Users.updateOne({ _id: req.userId }, {
+                $set: {
+                    avatar: data.url
+                }
+            });
+            res.status(200).send({
+                message: "Đổi avatar thành công",
+                avatar: data.url
+            })
+        }).catch(err => {
+            next(err);
+        })
+
+    }).catch(err => {
+        cloudinary.v2.uploader.upload(req.file.path).then(data => {
+            Users.updateOne({ _id: req.userId }, {
+                $set: {
+                    avatar: data.url
+                }
+            });
+            res.status(200).send({
+                message: "Đổi avatar thành công",
+                avatar: data.url
+            })
+        }).catch(err => {
+            next(err);
+        })
+
+    })
+
+}
+
 module.exports.forgotPassword = async function (req, res, next) {
     try {
         var pass = Math.floor(Math.random() * 1000000);
@@ -181,6 +203,7 @@ module.exports.changepassword = async function (req, res, next) {
         next(error);
     }
 }
+
 module.exports.changeAvatar = function (req, res, next) {
     cloudinary.v2.uploader.upload(req.file.path).then(data => {
         Users.updateOne({ _id: req.userId }, {

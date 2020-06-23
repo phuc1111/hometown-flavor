@@ -15,22 +15,9 @@ router.post('/login', controller.login);
 router.get('/logout', controller.logout);
 router.get('/forgotpassword/:phone', controller.forgotPassword);
 
-router.post('/register',
-    upload.single('avatar'),
-    validate.checkCreate,
-    controller.register
-)
 
 router.get('/me', VerifyToken, controller.me)
 
-
-
-router.patch('/update/:id',
-    upload.single('avatar'),
-    VerifyToken,
-    validate.checkCreate,
-    controller.update
-)
 router.patch('/check/:id',
     // VerifyToken,
     controller.check
