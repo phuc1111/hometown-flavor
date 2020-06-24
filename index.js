@@ -11,9 +11,6 @@ require("./middleware/cloundinary");
 var mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URL);
 
-const send = require('./validate/sms.validate');
-
-
 const housewifeRoutes = require("./routes/housewife.route");
 const authRoutes = require("./routes/auth.route");
 const foodRoutes = require("./routes/food.route");
@@ -33,7 +30,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 app.use(express.static("assets"));
 
-app.get("/api/", (req, res) => res.send("index"));
+app.get("/", (req, res) => res.send("Hello, Phúc nè"));
 app.use("/api/auth", authRoutes);
 app.use("/api/housewifes", housewifeRoutes);
 app.use("/api/foods", foodRoutes);
@@ -41,9 +38,8 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/comments", commentRoutes);
 
 
-
 app.listen(port, () =>
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Hometown flavor listening at http://localhost:${port}`)
 );
 
 

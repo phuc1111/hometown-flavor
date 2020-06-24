@@ -17,8 +17,6 @@ module.exports.create = function (req, res, next) {
         .catch(error => {
             next(err.message);
         })
-
-
 };
 
 module.exports.getComment = async function (req, res, next) {
@@ -28,18 +26,8 @@ module.exports.getComment = async function (req, res, next) {
     } catch (err) {
         next(err.message)
     }
-
 };
 
-// module.exports.delete = async function (req, res, next) {
-//     try {
-
-//         var comment = await Comment.deleteOne({ '_id': req.params.id });
-//         res.send({ "message": "Xóa bình luận thành công" });
-//     } catch (err) {
-//         next(err.message)
-//     }
-// }
 module.exports.delete = function (req, res, next) {
     Comment.find({ '_id': req.params.id })
         .then(comment => {
@@ -74,7 +62,6 @@ module.exports.checkOk = async function (req, res, next) {
             res.status(401).send({ message: "Không có quyền xác nhận bình luận" })
         }
 
-
     } catch (err) {
         console.log(err)
         next(err.message)
@@ -98,5 +85,3 @@ module.exports.update = async function (req, res, next) {
         next(err.message)
     }
 }
-
-

@@ -2,9 +2,6 @@ var Comment = require('../model/comment.model')
 
 module.exports.checkCreate = function (req, res, next) {
     var errors = [];
-    // if (req.userId) {
-    //     errors.push('id_Food is require');
-    // }
     if (!req.body.id_food) {
         errors.push('id_Food is require');
     }
