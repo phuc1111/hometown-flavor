@@ -28,7 +28,7 @@ module.exports.login = function (req, res) {
 
         // if user is found and password is valid
         // create a token
-        var token = jwt.sign({ id: user._id }, config.secret, {
+        var token = jwt.sign({ id: user._id, role: user.role }, config.secret, {
             expiresIn: 3600 // expires in 1 hours
         });
 

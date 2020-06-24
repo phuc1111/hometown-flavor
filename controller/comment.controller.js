@@ -63,12 +63,17 @@ module.exports.delete = function (req, res, next) {
 
 module.exports.checkOk = async function (req, res, next) {
     try {
-        var comment = await Comment.updateOne({ _id: req.params.id }, {
-            $set: {
-                isckeck: true
-            }
-        });
-        res.status(200).send(comment);
+        if (req.role == "admin") {
+            var comment = await Comment.updateOne({ _id: req.params.id }, {
+                $set: {
+                    isckeck: true
+                }
+            });
+            res.status(200).send(comment);
+        } else {
+            res.status(401).send({ message: "Không có quyền xác nhận bình luận" })
+        }
+
 
     } catch (err) {
         console.log(err)

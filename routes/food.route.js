@@ -4,7 +4,7 @@ var router = express.Router();
 var controller = require('../controller/food.controller')
 var validate = require('../validate/food.validate')
 var VerifyAdmin = require('../middleware/checkAdmin')
-
+var verifyToken = require('../controller/VerifyToken')
 var VerifyHousewife = require('../middleware/checkHousewife')
 
 var multer = require('multer')
@@ -12,19 +12,19 @@ var upload = multer({ dest: 'assets/uploads/' })
 router.get('/', controller.getFoods);
 
 router.post('/create',
-    VerifyHousewife,
+    verifyToken,
     upload.single('image'),
     validate.checkCreate,
     controller.create
 );
 
 router.patch('/update/:id',
-    VerifyAdmin,
+    verifyToken,
     controller.checkOk
 );
 
 router.delete('/delete/:id/:image_id',
-    VerifyHousewife,
+    verifyToken,
     controller.delete
 )
 

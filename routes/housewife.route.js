@@ -20,11 +20,11 @@ router.post('/signup', check.checkSignup, controller.signup);
 router.get('/me', VerifyToken, controller.me)
 
 router.patch('/check/:id',
-    // VerifyToken,
+    VerifyToken,
     controller.check
 )
 router.delete('/delete/:id',
-    VerifyAdmin,
+    VerifyToken,
     controller.delete
 )
 

@@ -27,7 +27,7 @@ module.exports.login = function (req, res) {
 
         // if user is found and password is valid
         // create a token
-        var token = jwt.sign({ id: user._id }, config.secret, {
+        var token = jwt.sign({ id: user._id, role: user.role }, config.secret, {
             expiresIn: 7200 // expires in 2 hours
         });
 
@@ -77,12 +77,18 @@ module.exports.me = function (req, res, next) {
 
 module.exports.check = async function (req, res, next) {
     try {
-        var user = await Users.updateOne({ code: req.params.code }, {
-            $set: {
-                isCkeck: true
-            }
-        });
-        res.status(200).json({ "message": "Xác nhận thành công" });
+        if (req.role == "admin") {
+            var user = await Users.updateOne({ code: req.params.code }, {
+                $set: {
+                    isCkeck: true
+                }
+            });
+            res.status(200).json({ "message": "Xác nhận thành công" });
+        } else {
+            res.status(401).send({ message: "Không có quyền update" });
+
+        }
+
 
     } catch (err) {
         next(err.message)
@@ -91,9 +97,15 @@ module.exports.check = async function (req, res, next) {
 
 module.exports.delete = async function (req, res, next) {
     try {
-        await cloudinary.v2.uploader.destroy(req.body.image_id);
-        var user = await Users.deleteOne({ '_id': req.userId });
-        res.send({ "message": "Xóa user thành công", user: user });
+        if (req.role == "admin" || req.role == "housewife") {
+            await cloudinary.v2.uploader.destroy(req.body.image_id);
+            var user = await Users.deleteOne({ '_id': req.userId });
+            res.send({ "message": "Xóa user thành công", user: user });
+        } else {
+            res.status(401).send({ message: "Không có quyền xóa đầu bếp" });
+
+        }
+
     } catch (err) {
         next(err.message)
     }

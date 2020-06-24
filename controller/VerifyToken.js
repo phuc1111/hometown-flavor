@@ -13,6 +13,8 @@ function verifyToken(req, res, next) {
         if (err)
             return res.status(500).send({ auth: false, message: 'Sai token, vui lòng cung cấp token hợp lệ' });
         req.userId = decoded.id;
+        req.role = decoded.role;
+        // console.log(decoded)
         next();
     });
 

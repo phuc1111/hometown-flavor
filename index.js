@@ -42,18 +42,6 @@ app.use("/api/comments", commentRoutes);
 
 
 
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-
-const swaggerDocument = require('./swagger.js');
-
-
-app.use('/docs', swaggerUi.serve);
-app.get('/docs', swaggerUi.setup(swaggerDocument, {
-    explorer: true
-}));
-
-
 app.listen(port, () =>
     console.log(`Example app listening at http://localhost:${port}`)
 );

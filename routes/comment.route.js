@@ -13,7 +13,7 @@ router.post('/create',
     controller.create
 );
 
-router.patch('/check/:id', VerifyAdmin, controller.checkOk);
+router.patch('/check/:id', VerifyToken, controller.checkOk);
 router.patch('/update/:id',
     VerifyToken,
     validate.checkCreate,
