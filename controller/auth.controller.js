@@ -100,6 +100,25 @@ module.exports.signup = function (req, res, next) {
 
 };
 
+
+module.exports.signupAdmin = function (req, res, next) {
+
+    req.body.password = bcrypt.hashSync(req.body.password, salt);
+    req.body.role = "admin";
+    var user = Users.create(req.body).then(data => {
+        res.status(200).send(data);
+    }).catch(error => {
+        if (error.name === 'MongoError' && error.code === 11000) {
+            // next(new Error('There was a duplicate key error'));
+            res.status(401).send('Số điện thoại đã được đăng ký');
+        } else {
+            next(error);
+        }
+
+    })
+
+};
+
 module.exports.me = function (req, res, next) {
 
     Users.findById(req.userId, { password: 0 }, function (err, user) {

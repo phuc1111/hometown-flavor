@@ -44,4 +44,9 @@ router.patch('/changeavatar/:image_id',
     controller.changeAvatar
 );
 
+router.post('/admin/signup',
+    check.checkSignup,
+    controller.signupAdmin
+);
+
 module.exports = router;
