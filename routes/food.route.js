@@ -19,7 +19,7 @@ router.post('/create',
 );
 
 router.patch('/update/:id',
-    VerifyHousewife,
+    VerifyAdmin,
     controller.checkOk
 );
 

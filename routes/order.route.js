@@ -6,7 +6,7 @@ var validate = require('../validate/order.validate')
 
 router.get('/getOrder', VerifyToken, controller.getOrder);
 
-router.post('/create', VerifyToken, controller.create);
+router.post('/create', validate.checkCreate, VerifyToken, controller.create);
 
 router.patch('/update/:id', VerifyToken, controller.update);
 

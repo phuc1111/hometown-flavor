@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var controller = require('../controller/comment.controller')
-
+var VerifyAdmin = require('../middleware/checkAdmin')
 var VerifyToken = require('../controller/VerifyToken')
 var validate = require('../validate/comment.validate')
 
@@ -13,7 +13,7 @@ router.post('/create',
     controller.create
 );
 
-router.patch('/check/:id', controller.checkOk);
+router.patch('/check/:id', VerifyAdmin, controller.checkOk);
 router.patch('/update/:id',
     VerifyToken,
     validate.checkCreate,

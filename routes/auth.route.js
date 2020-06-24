@@ -12,9 +12,16 @@ router.post('/login', controller.login);
 
 router.get('/logout', controller.logout);
 
-router.post('/register', upload.single('avatar'), check.checkCreate, controller.register);
+router.post('/register',
+    upload.single('avatar'),
+    check.checkCreate,
+    controller.register
+);
 
-router.post('/signup', check.checkSignup, controller.signup);
+router.post('/signup',
+    check.checkSignup,
+    controller.signup
+);
 
 router.get('/me', verifyToken, controller.me);
 
@@ -24,7 +31,11 @@ router.delete('/delete', verifyToken, controller.delete);
 
 router.post('/forgotpassword/:phone', controller.forgotPassword);
 
-router.patch('/changepassword/:phone', check.checkChangPassword, verifyToken, controller.changepassword);
+router.patch('/changepassword/:phone',
+    check.checkChangPassword,
+    verifyToken,
+    controller.changepassword
+);
 
 router.patch('/changeavatar/:image_id',
     check.checkChangAvatar,

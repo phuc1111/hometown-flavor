@@ -53,6 +53,7 @@ module.exports.checkOk = async function (req, res, next) {
                 isCkeck: true
             }
         });
+        food.message = "Update thành công"
         res.json(food);
 
     } catch (err) {
