@@ -7,6 +7,7 @@ var foodSchema = new mongoose.Schema({
     },
     location: {
         type: String,
+        // enum: ['Miền Bắc', 'Miền Trung', 'Miền Nam'],
         required: [true, 'location is required']
     },
     image: {

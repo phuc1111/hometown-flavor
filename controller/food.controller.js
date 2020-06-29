@@ -12,12 +12,17 @@ var salt = bcrypt.genSaltSync(10);
 module.exports.create = async function (req, res, next) {
     try {
         if (req.role == "housewife") {
-            const result = await cloudinary.v2.uploader.upload(req.file.path)
-            req.body.image = result.url;
-            req.body.image_id = result.public_id;
-            //create food
-            var food = await Food.create(req.body);
-            res.status(200).send(food);
+            if ((req.body.location == "Miền Bắc") || (req.body.location == "Miền Nam") || (req.body.location == "Miền Trung")) {
+                const result = await cloudinary.v2.uploader.upload(req.file.path)
+                req.body.image = result.url;
+                req.body.image_id = result.public_id;
+                //create food
+                var food = await Food.create(req.body);
+                res.status(200).send(food);
+            } else {
+                res.status(401).send({ message: "Vùng miền không hợp lệ" });
+            }
+
         } else {
             res.status(401).send({ message: "Không có quyền thêm sản phẩm" });
         }
@@ -31,8 +36,13 @@ module.exports.create = async function (req, res, next) {
 
 module.exports.getFoods = async function (req, res, next) {
     try {
-        var food = await Food.find();
-        res.status(200).send(food);
+        if ((req.body.location == "Miền Bắc") || (req.body.location == "Miền Nam") || (req.body.location == "Miền Trung")) {
+            var food = await Food.find({ 'location': req.body.location });
+            res.status(200).send(food);
+        } else {
+            res.status(401).send({ message: "Vùng miền không hợp lệ" });
+        }
+
     } catch (err) {
         console.log(err);
         next(err.message)
