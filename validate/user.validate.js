@@ -14,38 +14,28 @@ var checkPhone = phone => {
 }
 
 module.exports.checkCreate = function (req, res, next) {
-    var errors = [];
+
+    var err = [];
+    var message = null;
+
     if (!req.body.name) {
-        errors.push('Name is require');
+        err.push('Vui lòng nhập tên');
     }
     if (!req.body.email) {
-        errors.push('Email is require');
+        err.push('Vui lòng nhập email');
     }
     if (!req.body.address) {
-        errors.push('Address is require');
-    }
-    if (!req.body.phone) {
-        errors.push('Phone is require');
-    } else {
-        if (req.body.phone.length < 6 || req.body.phone.length > 12) {
-            errors.push('Phone is not corect');
-        }
-    }
-    if (!req.body.password) {
-        errors.push('Password is require');
-    } else {
-        if (req.body.password.length < 6 || req.body.password.length > 32) {
-            errors.push('Password is not corect');
-        }
+        err.push('Vui lòng nhập địa chỉ');
     }
     if (!checkemail(req.body.email)) {
-        errors.push('Email is not corect');
+        err.push('Email không hợp lệ');
     }
-    // if (!req.body.avatar) {
-    //     errors.push('Avatar is not corect');
-    // }
-    if (errors.length) {
-        res.status(401).send(errors);
+    if (!req.file) {
+        err.push('Chưa chọn hình, vui lòng chọn hình');
+    }
+    if (err.length) {
+        message = err[0]
+        res.status(401).send({ err, message });
         return;
     }
     next()
@@ -53,26 +43,23 @@ module.exports.checkCreate = function (req, res, next) {
 
 module.exports.checkSignup = function (req, res, next) {
     var errors = [];
-
     if (!req.body.phone) {
-        errors.push('Phone is require');
+        errors.push('Vui lòng nhập số điện thoại');
     } else {
-        if (req.body.phone.length < 6 || req.body.phone.length > 12) {
-            errors.push('Phone is not corect');
-        } if (!checkPhone(req.body.phone)) {
-            errors.push('Phone not valid');
+        if (!checkPhone(req.body.phone)) {
+            errors.push('Số điện thoại không hợp lệ');
         }
     }
     if (!req.body.password) {
-        errors.push('Password is require');
+        errors.push('Vui lòng nhập mật khẩu');
     } else {
         if (req.body.password.length < 6 || req.body.password.length > 32) {
-            errors.push('Password is not corect');
+            errors.push('Mật khẩu không hợp lệ');
         }
     }
 
     if (errors.length) {
-        res.status(401).send(errors);
+        res.status(401).send({ errors, message: errors[0] });
         return;
     }
     next()
@@ -86,7 +73,7 @@ module.exports.checkChangAvatar = function (req, res, next) {
     }
 
     if (errors.length) {
-        res.status(401).send(errors);
+        res.status(401).send({ message: errors[0] });
         return;
     }
     next()
@@ -105,7 +92,7 @@ module.exports.checkChangPassword = function (req, res, next) {
         errors.push('Vui lòng cung cấp số điện thoại hợp lệ');
     }
     if (errors.length) {
-        res.status(401).send(errors);
+        res.status(401).send({ errors, message: errors[0] });
         return;
     }
     next()

@@ -3,32 +3,32 @@ var Food = require('../model/food.model')
 module.exports.checkCreate = function (req, res, next) {
     var errors = [];
     if (!req.body.foods) {
-        errors.push('Foods is require');
+        errors.push('Vui lòng thêm chi tiết');
     }
     if (!req.body.location) {
-        errors.push('Location is require');
+        errors.push('Vui lòng thêm vùng miền');
     }
     if (!req.file) {
-        errors.push('image is require');
+        errors.push('Chưa có hình');
     }
     if (!req.body.description) {
-        errors.push('description is require');
+        errors.push('Vui lòng thêm mô tả');
     }
     if (!req.body.housewife_name) {
-        errors.push('Housewife_name is require');
+        errors.push('Vui lòng thêm tên đầu bếp');
     }
     if (!req.body.price) {
-        errors.push('Price is require');
+        errors.push('Vui lòng thêm giá sản phẩm');
     } else {
         if (req.body.price.length < 4) {
-            errors.push('Price is not corect');
+            errors.push('Giá nhỏ nhât là 1000 vnd');
         }
     }
     if (!req.body.name) {
-        errors.push('Name is require');
+        errors.push('Vui lòng thêm tên sản phẩm');
     }
     if (errors.length) {
-        res.status(401).send(errors)
+        res.status(401).send({ message: errors[0], errors })
         return;
     }
     next()

@@ -5,7 +5,7 @@ var VerifyAdmin = require('../middleware/checkAdmin')
 var VerifyToken = require('../controller/VerifyToken')
 var validate = require('../validate/comment.validate')
 
-router.get('/', VerifyToken, controller.getComment);
+router.get('/:id_food', controller.getComment);
 
 router.post('/create',
     VerifyToken,

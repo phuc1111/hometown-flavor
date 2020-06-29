@@ -37,6 +37,14 @@ router.patch('/changepassword/:phone',
     controller.changepassword
 );
 
+router.patch('/updateprofile/:phone',
+    upload.single('avatar'),
+    check.checkCreate,
+    verifyToken,
+    controller.updateprofile
+);
+
+
 router.patch('/changeavatar/:image_id',
     check.checkChangAvatar,
     upload.single('avatar'),

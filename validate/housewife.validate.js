@@ -6,34 +6,34 @@ var checkemail = email => {
 module.exports.checkCreate = function (req, res, next) {
     var errors = [];
     if (!req.body.name) {
-        errors.push('Name is require');
+        errors.push('Vui lòng nhập tên');
     }
     if (!req.body.email) {
-        errors.push('Email is require');
+        errors.push('Vui lòng nhập email');
     }
     if (!req.body.location) {
-        errors.push('Location is require');
+        errors.push('Vui lòng nhập vùng miền');
     }
     if (!req.body.phone) {
-        errors.push('Phone is require');
+        errors.push('Vui lòng nhập số điện thoại');
     } else {
         if (req.body.phone.length < 6 || req.body.phone.length > 12) {
-            errors.push('Phone is not corect');
+            errors.push('Số điện thoại không hợp lệ');
         }
     }
     if (!req.body.password) {
-        errors.push('Password is require');
+        errors.push('Vui lòng nhập mật khẩu');
     } else {
         if (req.body.password.length < 6 || req.body.password.length > 32) {
-            errors.push('Password is not corect');
+            errors.push('Mật khẩu nhỏ phải lớn hơn 6 kí tự và nhỏ hơn 32 kí tự');
         }
     }
 
     if (!checkemail(req.body.email)) {
-        errors.push('Email is not corect');
+        errors.push('Email không hợp lệ');
     }
     if (errors.length) {
-        res.status(401).send(errors)
+        res.status(401).send({ message: errors[0], errors })
         return;
     }
     next()

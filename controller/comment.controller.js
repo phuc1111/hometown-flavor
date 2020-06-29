@@ -21,12 +21,22 @@ module.exports.create = function (req, res, next) {
 
 module.exports.getComment = async function (req, res, next) {
     try {
-        var comment = await Comment.find();
-        res.status(200).send(comment);
+        var comment = await Comment.find({ id_food: req.params.id_food });
+        await res.status(200).send(comment);
     } catch (err) {
         next(err.message)
     }
 };
+
+// module.exports.getComment = async function (req, res, next) {
+//     try {
+//         var comment = await Comment.find();
+//         res.status(200).send(comment);
+//     } catch (err) {
+//         next(err.message)
+//     }
+// };
+
 
 module.exports.delete = function (req, res, next) {
     Comment.find({ '_id': req.params.id })

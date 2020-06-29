@@ -4,14 +4,14 @@ var Order = require('../model/order.model')
 module.exports.checkCreate = function (req, res, next) {
     var errors = [];
     if (!req.body.food_id) {
-        errors.push('Food_id is require');
+        errors.push('Vui lòng nhập id sản phẩm');
     }
     if (!req.body.number) {
-        errors.push('Number is require');
+        errors.push('Vui lòng nhập số lượng');
     }
 
     if (errors.length) {
-        res.status(401).send(errors)
+        res.status(401).send({ message: errors[0], errors })
         return;
     }
     next()
@@ -24,14 +24,14 @@ module.exports.checkDelete = function (req, res, next) {
                 errors.push('Vui lòng hủy đơn hàng trước 1 ngày');
             }
             if (errors.length) {
-                res.status(401).send(errors)
+                res.status(401).send({ message: errors[0] })
                 return;
             }
             next()
         })
-        .catch(err => {
-            err.message = "Không tìm thấy đơn hàng";
-            res.status(401).send(err)
+        .catch(() => {
+
+            res.status(401).send({ message: "Không tìm thấy đơn hàng" })
             // next(err)
         })
 }
