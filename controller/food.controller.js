@@ -36,13 +36,17 @@ module.exports.create = async function (req, res, next) {
 
 module.exports.getFoods = async function (req, res, next) {
     try {
-        if ((req.body.location == "Miền Bắc") || (req.body.location == "Miền Nam") || (req.body.location == "Miền Trung")) {
-            var food = await Food.find({ 'location': req.body.location });
+        if (!req.body.location) {
+            var food = await Food.find();
             res.status(200).send(food);
         } else {
-            res.status(401).send({ message: "Vùng miền không hợp lệ" });
+            if ((req.body.location == "Miền Bắc") || (req.body.location == "Miền Nam") || (req.body.location == "Miền Trung")) {
+                var food = await Food.find({ 'location': req.body.location });
+                res.status(200).send(food);
+            } else {
+                res.status(401).send({ message: "Vùng miền không hợp lệ" });
+            }
         }
-
     } catch (err) {
         console.log(err);
         next(err.message)
