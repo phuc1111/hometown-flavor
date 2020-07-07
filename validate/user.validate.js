@@ -30,9 +30,9 @@ module.exports.checkCreate = function(req, res, next) {
     if (!checkemail(req.body.email)) {
         err.push('Email không hợp lệ');
     }
-    if (!req.file) {
-        err.push('Chưa chọn hình, vui lòng chọn hình');
-    }
+    // if (!req.file) {
+    //     err.push('Chưa chọn hình, vui lòng chọn hình');
+    // }
     if (err.length) {
         message = err[0]
         res.status(401).send({ err, message });
