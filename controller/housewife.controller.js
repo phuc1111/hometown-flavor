@@ -10,16 +10,16 @@ var salt = bcrypt.genSaltSync(10);
 var twilio = require('twilio');
 
 var accountSid = 'ACe22d535911002bdeda7e25db8a79c2da'; // Your Account SID from www.twilio.com/console
-var authToken = 'e2788c659d1ee62a7a9ce90517fbb189';   // Your Auth Token from www.twilio.com/console
+var authToken = 'e2788c659d1ee62a7a9ce90517fbb189'; // Your Auth Token from www.twilio.com/console
 
 var client = new twilio(accountSid, authToken);
 
 
 
-module.exports.login = function (req, res) {
-    Users.findOne({ phone: req.body.phone }, function (err, user) {
-        if (err) return res.status(500).send('Server hiện đang bảo trì');
-        if (!user) return res.status(404).send('Không tìm thấy user');
+module.exports.login = function(req, res) {
+    Users.findOne({ phone: req.body.phone }, function(err, user) {
+        if (err) return res.status(500).send({ message: 'Server hiện đang bảo trì' });
+        if (!user) return res.status(404).send({ message: 'Không tìm thấy user' });
 
         // check if the password is valid
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
@@ -32,23 +32,21 @@ module.exports.login = function (req, res) {
         });
 
         // return the information including token as JSON
-        res.status(200).send(
-            {
-                users: user,
-                auth: true,
-                token: token,
-                expiresIn: 7200
-            }
-        );
+        res.status(200).send({
+            users: user,
+            auth: true,
+            token: token,
+            expiresIn: 7200
+        });
     });
 
 };
 
-module.exports.logout = function (req, res) {
+module.exports.logout = function(req, res) {
     res.status(200).send({ auth: false, token: null });
 };
 
-module.exports.signup = function (req, res, next) {
+module.exports.signup = function(req, res, next) {
 
     req.body.password = bcrypt.hashSync(req.body.password, salt);
     req.body.role = "housewife";
@@ -57,7 +55,9 @@ module.exports.signup = function (req, res, next) {
     }).catch(error => {
         if (error.name === 'MongoError' && error.code === 11000) {
             // next(new Error('There was a duplicate key error'));
-            res.status(401).send('Số điện thoại đã được đăng ký');
+            res.status(401).send({
+                message: "Số điện thoại đã được đăng ký"
+            });
         } else {
             next(error);
         }
@@ -66,16 +66,20 @@ module.exports.signup = function (req, res, next) {
 
 };
 
-module.exports.me = function (req, res, next) {
+module.exports.me = function(req, res, next) {
 
-    Users.findById(req.userId, { password: 0 }, function (err, user) {
-        if (err) return res.status(500).send("Users không tồn tại");
-        if (!user) return res.status(404).send("Không tìm thấy user");
+    Users.findById(req.userId, { password: 0 }, function(err, user) {
+        if (err) return res.status(500).send({
+            message: "Users không tồn tại"
+        });
+        if (!user) return res.status(404).send({
+            message: "Không tìm thấy user"
+        });
         res.status(200).send(user);
     })
 };
 
-module.exports.check = async function (req, res, next) {
+module.exports.check = async function(req, res, next) {
     try {
         if (req.role == "admin") {
             var user = await Users.updateOne({ code: req.params.code }, {
@@ -95,7 +99,7 @@ module.exports.check = async function (req, res, next) {
     }
 }
 
-module.exports.delete = async function (req, res, next) {
+module.exports.delete = async function(req, res, next) {
     try {
         if (req.role == "admin" || req.role == "housewife") {
             await cloudinary.v2.uploader.destroy(req.body.image_id);
@@ -111,7 +115,7 @@ module.exports.delete = async function (req, res, next) {
     }
 }
 
-module.exports.forgotPassword = async function (req, res, next) {
+module.exports.forgotPassword = async function(req, res, next) {
     try {
         var pass = Math.floor(Math.random() * 1000000);
         newPassword = bcrypt.hashSync(pass.toString(), salt);
@@ -124,7 +128,7 @@ module.exports.forgotPassword = async function (req, res, next) {
 
         var sms = client.messages.create({
             body: "Mật khẩu mới là: " + pass,
-            to: '+' + req.params.phone,  // Text this number
+            to: '+' + req.params.phone, // Text this number
             from: '+12565888023' // From a valid Twilio number
         });
         res.status(200).send({ "message": "Đã gửi mật khẩu mới về điện thoại" });
@@ -133,7 +137,7 @@ module.exports.forgotPassword = async function (req, res, next) {
     }
 };
 
-module.exports.changepassword = async function (req, res, next) {
+module.exports.changepassword = async function(req, res, next) {
     try {
         var user = Users.updateOne({ _id: req.userId }, {
             $set: {
@@ -146,7 +150,7 @@ module.exports.changepassword = async function (req, res, next) {
         next(error);
     }
 }
-module.exports.changeAvatar = function (req, res, next) {
+module.exports.changeAvatar = function(req, res, next) {
     cloudinary.v2.uploader.upload(req.file.path).then(data => {
         Users.updateOne({ _id: req.userId }, {
             $set: {

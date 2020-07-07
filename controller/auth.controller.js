@@ -11,16 +11,16 @@ var salt = bcrypt.genSaltSync(10);
 var twilio = require('twilio');
 
 var accountSid = 'ACe22d535911002bdeda7e25db8a79c2da'; // Your Account SID from www.twilio.com/console
-var authToken = 'e2788c659d1ee62a7a9ce90517fbb189';   // Your Auth Token from www.twilio.com/console
+var authToken = 'e2788c659d1ee62a7a9ce90517fbb189'; // Your Auth Token from www.twilio.com/console
 
 var client = new twilio(accountSid, authToken);
 
 
 
-module.exports.login = function (req, res) {
-    Users.findOne({ phone: req.body.phone }, function (err, user) {
-        if (err) return res.status(500).send('Server hiện đang bảo trì');
-        if (!user) return res.status(404).send('Không tìm thấy user');
+module.exports.login = function(req, res) {
+    Users.findOne({ phone: req.body.phone }, function(err, user) {
+        if (err) return res.status(500).send({ message: 'Server hiện đang bảo trì' });
+        if (!user) return res.status(404).send({ message: 'Không tìm thấy user' });
 
         // check if the password is valid
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
@@ -33,57 +33,55 @@ module.exports.login = function (req, res) {
         });
 
         // return the information including token as JSON
-        res.status(200).send(
-            {
-                users: user,
-                auth: true,
-                token: token,
-                expiresIn: 3600
-            }
-        );
+        res.status(200).send({
+            users: user,
+            auth: true,
+            token: token,
+            expiresIn: 3600
+        });
     });
 
 };
 
-module.exports.logout = function (req, res) {
+module.exports.logout = function(req, res) {
     res.status(200).send({ auth: false, token: null });
 };
 
-module.exports.register = function (req, res, next) {
+module.exports.register = function(req, res, next) {
     cloudinary.v2.uploader.upload(req.file.path).then(data => {
-        req.body.avatar = data.url;
-        req.body.password = bcrypt.hashSync(req.body.password, salt);
-        req.body.image_id = data.public_id;
-        Users.create(req.body).then(user => {
-            res.status(200).send(user);
-            // client.messages.create({
-            //     body: "OTP của bạn là " + user.code,
-            //     to: '+' + user.phone,  // Text this number
-            //     from: '+12565888023' // From a valid Twilio number
-            // })
-            //     .then((message) => {
-            //         var response = {
-            //             message: "Đăng ký thành công",
-            //             phone: user.phone,
-            //             email: user.email,
-            //             address: user.address
-            //         }
-            //         res.status(200).send(response);
-            //     })
-            //     .catch(err => {
-            //         next(err)
-            //     });
+            req.body.avatar = data.url;
+            req.body.password = bcrypt.hashSync(req.body.password, salt);
+            req.body.image_id = data.public_id;
+            Users.create(req.body).then(user => {
+                    res.status(200).send(user);
+                    // client.messages.create({
+                    //     body: "OTP của bạn là " + user.code,
+                    //     to: '+' + user.phone,  // Text this number
+                    //     from: '+12565888023' // From a valid Twilio number
+                    // })
+                    //     .then((message) => {
+                    //         var response = {
+                    //             message: "Đăng ký thành công",
+                    //             phone: user.phone,
+                    //             email: user.email,
+                    //             address: user.address
+                    //         }
+                    //         res.status(200).send(response);
+                    //     })
+                    //     .catch(err => {
+                    //         next(err)
+                    //     });
+                })
+                .catch(err => {
+                    next(err.message);
+                })
         })
-            .catch(err => {
-                next(err.message);
-            })
-    })
         .catch(err => {
             next(err.message)
         })
 };
 
-module.exports.signup = function (req, res, next) {
+module.exports.signup = function(req, res, next) {
 
     req.body.password = bcrypt.hashSync(req.body.password, salt);
     var user = Users.create(req.body).then(data => {
@@ -101,7 +99,7 @@ module.exports.signup = function (req, res, next) {
 };
 
 
-module.exports.signupAdmin = function (req, res, next) {
+module.exports.signupAdmin = function(req, res, next) {
 
     req.body.password = bcrypt.hashSync(req.body.password, salt);
     req.body.role = "admin";
@@ -119,16 +117,16 @@ module.exports.signupAdmin = function (req, res, next) {
 
 };
 
-module.exports.me = function (req, res, next) {
+module.exports.me = function(req, res, next) {
 
-    Users.findById(req.userId, { password: 0 }, function (err, user) {
+    Users.findById(req.userId, { password: 0 }, function(err, user) {
         if (err) return res.status(500).send("Users không tồn tại");
         if (!user) return res.status(404).send("Không tìm thấy user");
         res.status(200).send(user);
     })
 };
 
-module.exports.check = async function (req, res, next) {
+module.exports.check = async function(req, res, next) {
     try {
         var user = await Users.updateOne({ code: req.params.code }, {
             $set: {
@@ -142,7 +140,7 @@ module.exports.check = async function (req, res, next) {
     }
 }
 
-module.exports.delete = async function (req, res, next) {
+module.exports.delete = async function(req, res, next) {
     try {
         await cloudinary.v2.uploader.destroy(req.body.image_id);
         var user = await Users.deleteOne({ '_id': req.userId });
@@ -152,7 +150,7 @@ module.exports.delete = async function (req, res, next) {
     }
 }
 
-module.exports.changeAvatar = function (req, res, next) {
+module.exports.changeAvatar = function(req, res, next) {
     cloudinary.v2.uploader.destroy(req.params.image_id).then(() => {
         cloudinary.v2.uploader.upload(req.file.path).then(data => {
             Users.updateOne({ _id: req.userId }, {
@@ -187,7 +185,7 @@ module.exports.changeAvatar = function (req, res, next) {
 
 }
 
-module.exports.updateprofile = function (req, res, next) {
+module.exports.updateprofile = function(req, res, next) {
     cloudinary.v2.uploader.upload(req.file.path).then(data => {
         Users.updateOne({ _id: req.userId }, {
             $set: {
@@ -198,9 +196,10 @@ module.exports.updateprofile = function (req, res, next) {
                 address: req.body.address
             }
         }).then(data => {
-            console.log(data)
+
             res.status(200).send({
-                message: "Update profile thành công"
+                message: "Update profile thành công",
+                data: req.body
 
             })
         }).catch(err => {
@@ -213,7 +212,7 @@ module.exports.updateprofile = function (req, res, next) {
 }
 
 
-module.exports.forgotPassword = async function (req, res, next) {
+module.exports.forgotPassword = async function(req, res, next) {
     try {
         var pass = Math.floor(Math.random() * 1000000);
         newPassword = bcrypt.hashSync(pass.toString(), salt);
@@ -226,7 +225,7 @@ module.exports.forgotPassword = async function (req, res, next) {
 
         var sms = client.messages.create({
             body: "Mật khẩu mới là: " + pass,
-            to: '+' + req.params.phone,  // Text this number
+            to: '+' + req.params.phone, // Text this number
             from: '+12565888023' // From a valid Twilio number
         });
         res.status(200).send({ "message": "Đã gửi mật khẩu mới về điện thoại" });
@@ -235,7 +234,7 @@ module.exports.forgotPassword = async function (req, res, next) {
     }
 };
 
-module.exports.changepassword = async function (req, res, next) {
+module.exports.changepassword = async function(req, res, next) {
     try {
         var user = Users.updateOne({ _id: req.userId }, {
             $set: {
@@ -249,7 +248,7 @@ module.exports.changepassword = async function (req, res, next) {
     }
 }
 
-module.exports.changeAvatar = function (req, res, next) {
+module.exports.changeAvatar = function(req, res, next) {
     cloudinary.v2.uploader.upload(req.file.path).then(data => {
         Users.updateOne({ _id: req.userId }, {
             $set: {
