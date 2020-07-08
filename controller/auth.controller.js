@@ -89,7 +89,7 @@ module.exports.signup = function (req, res, next) {
     }).catch(error => {
         if (error.name === 'MongoError' && error.code === 11000) {
             // next(new Error('There was a duplicate key error'));
-            res.status(401).send({ message: 'Số điện thoại đã được đăng ký' });
+            res.status(500).send({ message: 'Số điện thoại đã được đăng ký' });
         } else {
             next(error);
         }
@@ -108,7 +108,7 @@ module.exports.signupAdmin = function (req, res, next) {
     }).catch(error => {
         if (error.name === 'MongoError' && error.code === 11000) {
             // next(new Error('There was a duplicate key error'));
-            res.status(401).send({ message: 'Số điện thoại đã được đăng ký' });
+            res.status(500).send({ message: 'Số điện thoại đã được đăng ký' });
         } else {
             next(error);
         }
