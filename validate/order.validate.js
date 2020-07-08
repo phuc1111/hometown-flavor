@@ -20,7 +20,7 @@ module.exports.checkDelete = function (req, res, next) {
     var errors = [];
     Order.find({ _id: req.params.id })
         .then(data => {
-            if (data[0].date_getOrder = date.getCurrentDay) {
+            if (data[0].date_getOrder <= date.getCurrentDay) {
                 errors.push('Vui lòng hủy đơn hàng trước 1 ngày');
             }
             if (errors.length) {
