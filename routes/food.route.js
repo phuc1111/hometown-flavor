@@ -24,7 +24,6 @@ router.patch('/update/:id',
 );
 
 router.get('/:id',
-    verifyToken,
     controller.getFoodFromId
 );
 
