@@ -120,8 +120,12 @@ module.exports.signupAdmin = function (req, res, next) {
 module.exports.me = function (req, res, next) {
 
     Users.findById(req.userId, { password: 0 }, function (err, user) {
-        if (err) return res.status(500).send("Users không tồn tại");
-        if (!user) return res.status(404).send("Không tìm thấy user");
+        if (err) return res.status(500).send({
+            message: "Users không tồn tại"
+        });
+        if (!user) return res.status(404).send({
+            message: "Không tìm thấy user"
+        });
         res.status(200).send(user);
     })
 };

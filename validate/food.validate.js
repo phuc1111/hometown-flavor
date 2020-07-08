@@ -28,7 +28,7 @@ module.exports.checkCreate = function (req, res, next) {
         errors.push('Vui lòng thêm tên sản phẩm');
     }
     if (errors.length) {
-        res.status(401).send({ message: errors[0], errors })
+        res.status(400).send({ message: errors[0], errors })
         return;
     }
     next()

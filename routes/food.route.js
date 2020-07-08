@@ -23,6 +23,12 @@ router.patch('/update/:id',
     controller.checkOk
 );
 
+router.get('/:id',
+    verifyToken,
+    controller.getFoodFromId
+);
+
+
 router.delete('/delete/:id/:image_id',
     verifyToken,
     controller.delete

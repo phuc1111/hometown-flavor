@@ -20,11 +20,11 @@ module.exports.create = async function (req, res, next) {
                 var food = await Food.create(req.body);
                 res.status(200).send(food);
             } else {
-                res.status(401).send({ message: "Vùng miền không hợp lệ" });
+                res.status(400).send({ message: "Vùng miền không hợp lệ" });
             }
 
         } else {
-            res.status(401).send({ message: "Không có quyền thêm sản phẩm" });
+            res.status(403).send({ message: "Không có quyền thêm sản phẩm" });
         }
 
     } catch (err) {
@@ -44,7 +44,7 @@ module.exports.getFoods = async function (req, res, next) {
                 var food = await Food.find({ 'location': req.body.location });
                 res.status(200).send(food);
             } else {
-                res.status(401).send({ message: "Vùng miền không hợp lệ" });
+                res.status(400).send({ message: "Vùng miền không hợp lệ" });
             }
         }
     } catch (err) {
@@ -60,12 +60,30 @@ module.exports.delete = async function (req, res, next) {
             var food = await Food.deleteOne({ '_id': req.params.id });
             res.send({ "message": "Xóa thành công" });
         } else {
-            res.status(401).send({ message: "Không có quyền xóa sản phẩm" });
+            res.status(403).send({ message: "Không có quyền xóa sản phẩm" });
 
         }
 
     } catch (err) {
         next(err.message)
+    }
+}
+
+module.exports.getFoodFromId = async function (req, res, next) {
+    try {
+        var food = await Food.findById(req.params.id);
+        res.status(200).send({
+            message: "Lấy chi tiết sản phẩm thành công",
+            data: food
+        });
+
+    } catch (err) {
+        if (err.name == "CastError" && err.path == "_id") {
+            res.status(404).send({
+                message: "Sản phẩm không tồn tại",
+                data: err
+            })
+        }
     }
 }
 
@@ -80,7 +98,7 @@ module.exports.checkOk = async function (req, res, next) {
             food.message = "Update thành công"
             res.json(food);
         } else {
-            res.status(401).send({ message: "Không có quyền update sản phẩm" });
+            res.status(403).send({ message: "Không có quyền update sản phẩm" });
         }
 
 

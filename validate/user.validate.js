@@ -13,7 +13,7 @@ var checkPhone = phone => {
     }
 }
 
-module.exports.checkCreate = function(req, res, next) {
+module.exports.checkCreate = function (req, res, next) {
 
     var err = [];
     var message = null;
@@ -35,13 +35,13 @@ module.exports.checkCreate = function(req, res, next) {
     // }
     if (err.length) {
         message = err[0]
-        res.status(401).send({ err, message });
+        res.status(400).send({ err, message });
         return;
     }
     next()
 }
 
-module.exports.checkSignup = function(req, res, next) {
+module.exports.checkSignup = function (req, res, next) {
     var errors = [];
     if (!req.body.phone) {
         errors.push('Vui lòng nhập số điện thoại');
@@ -59,13 +59,13 @@ module.exports.checkSignup = function(req, res, next) {
     }
 
     if (errors.length) {
-        res.status(401).send({ errors, message: errors[0] });
+        res.status(400).send({ errors, message: errors[0] });
         return;
     }
     next()
 }
 
-module.exports.checkChangAvatar = function(req, res, next) {
+module.exports.checkChangAvatar = function (req, res, next) {
     var errors = [];
 
     if (!req.file) {
@@ -73,13 +73,13 @@ module.exports.checkChangAvatar = function(req, res, next) {
     }
 
     if (errors.length) {
-        res.status(401).send({ message: errors[0] });
+        res.status(400).send({ message: errors[0] });
         return;
     }
     next()
 }
 
-module.exports.checkChangPassword = function(req, res, next) {
+module.exports.checkChangPassword = function (req, res, next) {
     var errors = [];
 
     if (!req.body.newPassword) {
@@ -92,7 +92,7 @@ module.exports.checkChangPassword = function(req, res, next) {
         errors.push('Vui lòng cung cấp số điện thoại hợp lệ');
     }
     if (errors.length) {
-        res.status(401).send({ errors, message: errors[0] });
+        res.status(404).send({ errors, message: errors[0] });
         return;
     }
     next()

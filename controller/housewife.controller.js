@@ -55,7 +55,7 @@ module.exports.signup = function (req, res, next) {
     }).catch(error => {
         if (error.name === 'MongoError' && error.code === 11000) {
             // next(new Error('There was a duplicate key error'));
-            res.status(401).send({
+            res.status(500).send({
                 message: "Số điện thoại đã được đăng ký"
             });
         } else {
@@ -89,7 +89,7 @@ module.exports.check = async function (req, res, next) {
             });
             res.status(200).json({ "message": "Xác nhận thành công" });
         } else {
-            res.status(401).send({ message: "Không có quyền update" });
+            res.status(403).send({ message: "Không có quyền update" });
 
         }
 
@@ -106,7 +106,7 @@ module.exports.delete = async function (req, res, next) {
             var user = await Users.deleteOne({ '_id': req.userId });
             res.send({ "message": "Xóa user thành công", user: user });
         } else {
-            res.status(401).send({ message: "Không có quyền xóa đầu bếp" });
+            res.status(403).send({ message: "Không có quyền xóa đầu bếp" });
 
         }
 

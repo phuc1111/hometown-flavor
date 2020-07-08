@@ -11,7 +11,7 @@ module.exports.checkCreate = function (req, res, next) {
     }
 
     if (errors.length) {
-        res.status(401).send({ message: errors[0], errors })
+        res.status(400).send({ message: errors[0], errors })
         return;
     }
     next()
@@ -24,14 +24,14 @@ module.exports.checkDelete = function (req, res, next) {
                 errors.push('Vui lòng hủy đơn hàng trước 1 ngày');
             }
             if (errors.length) {
-                res.status(401).send({ message: errors[0] })
+                res.status(500).send({ message: errors[0] })
                 return;
             }
             next()
         })
         .catch(() => {
 
-            res.status(401).send({ message: "Không tìm thấy đơn hàng" })
+            res.status(404).send({ message: "Không tìm thấy đơn hàng" })
             // next(err)
         })
 }

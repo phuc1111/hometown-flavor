@@ -69,7 +69,7 @@ module.exports.checkOk = async function (req, res, next) {
             });
             res.status(200).send(comment);
         } else {
-            res.status(401).send({ message: "Không có quyền xác nhận bình luận" })
+            res.status(403).send({ message: "Không có quyền xác nhận bình luận" })
         }
 
     } catch (err) {
