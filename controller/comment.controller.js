@@ -15,34 +15,35 @@ module.exports.create = function (req, res, next) {
                 })
         })
         .catch(error => {
-            next(err.message);
+            // next(err.message);
+            console.log(error)
+            res.status(404).send({
+                message: "Không tìm thấy sản phẩm này",
+                error
+            })
         })
 };
 
-module.exports.getComment = async function (req, res, next) {
-    try {
-        var comment = await Comment.find({ id_food: req.params.id_food });
-        await res.status(200).send(comment);
-    } catch (err) {
-        next(err.message)
-    }
+module.exports.getComment = function (req, res, next) {
+
+    Comment.find({ id_food: req.params.id_food }).then(data => {
+        res.status(200).send(comment);
+    }).catch(err => {
+        res.status(404).send({
+            message: "Không tìm thấy sản phẩm này",
+            err
+        });
+
+    })
+
+
+
 };
-
-// module.exports.getComment = async function (req, res, next) {
-//     try {
-//         var comment = await Comment.find();
-//         res.status(200).send(comment);
-//     } catch (err) {
-//         next(err.message)
-//     }
-// };
-
 
 module.exports.delete = function (req, res, next) {
     Comment.find({ '_id': req.params.id })
         .then(comment => {
-            console.log(comment);
-            console.log(req.userId);
+
             if (comment.user_id = req.userId) {
                 Comment.deleteOne({ '_id': req.params.id })
                     .then(() => {
@@ -55,7 +56,7 @@ module.exports.delete = function (req, res, next) {
                 res.status(401).send({ "message": "Bạn không thể xóa bình luận của người khác" });
             }
         }).catch(err => {
-            next(err);
+            res.status(404).send({ "message": "Không tìm thấy bình luận" });
         })
 }
 
