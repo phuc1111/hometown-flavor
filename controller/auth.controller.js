@@ -161,13 +161,22 @@ module.exports.changeAvatar = function (req, res, next) {
                 $set: {
                     avatar: data.url
                 }
-            });
-            res.status(200).send({
-                message: "Đổi avatar thành công",
-                avatar: data.url
+            }).then(() => {
+                res.status(200).send({
+                    message: "Đổi avatar thành công",
+                    avatar: data.url
+                })
+            }).catch(err => {
+                res.status(500).send({
+                    message: "Đổi avatar không thành công",
+                    avatar: err
+                })
             })
         }).catch(err => {
-            next(err);
+            res.status(500).send({
+                message: "Đổi avatar không thành công",
+                avatar: err
+            })
         })
 
     }).catch(err => {
@@ -176,15 +185,24 @@ module.exports.changeAvatar = function (req, res, next) {
                 $set: {
                     avatar: data.url
                 }
-            });
-            res.status(200).send({
-                message: "Đổi avatar thành công",
-                avatar: data.url
+            }).then(() => {
+                res.status(200).send({
+                    message: "Đổi avatar thành công",
+                    avatar: data.url
+                })
+            }).catch(err => {
+                res.status(500).send({
+                    message: "Đổi avatar không thành công",
+                    avatar: err
+                })
             })
-        }).catch(err => {
-            next(err);
-        })
 
+        }).catch(err => {
+            res.status(500).send({
+                message: "Đổi avatar không thành công",
+                avatar: err
+            })
+        })
     })
 
 }
@@ -271,19 +289,19 @@ module.exports.changepassword = async function (req, res, next) {
     }
 }
 
-module.exports.changeAvatar = function (req, res, next) {
-    cloudinary.v2.uploader.upload(req.file.path).then(data => {
-        Users.updateOne({ _id: req.userId }, {
-            $set: {
-                avatar: data.url
-            }
-        });
-        res.status(200).send({
-            message: "Đổi avatar thành công",
-            avatar: data.url
-        })
-    }).catch(err => {
-        next(err);
-    })
+// module.exports.changeAvatar = function (req, res, next) {
+//     cloudinary.v2.uploader.upload(req.file.path).then(data => {
+//         Users.updateOne({ _id: req.userId }, {
+//             $set: {
+//                 avatar: data.url
+//             }
+//         });
+//         res.status(200).send({
+//             message: "Đổi avatar thành công",
+//             avatar: data.url
+//         })
+//     }).catch(err => {
+//         next(err);
+//     })
 
-}
+// }

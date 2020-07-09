@@ -45,8 +45,9 @@ router.patch('/updateprofile/:phone',
 
 
 router.patch('/changeavatar/:image_id',
-    check.checkChangAvatar,
     upload.single('avatar'),
+    check.checkChangAvatar,
+
     verifyToken,
     controller.changeAvatar
 );
