@@ -4,7 +4,7 @@ var Orders = require('../model/order.model');
 var code = require('../autoCreate/code');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var bcrypt = require('bcryptjs');
-var config = require('../config');
+
 const cloudinary = require('cloudinary')
 require('../middleware/cloundinary')
 var salt = bcrypt.genSaltSync(10);
@@ -28,7 +28,7 @@ module.exports.login = function (req, res) {
 
         // if user is found and password is valid
         // create a token
-        var token = jwt.sign({ id: user._id, role: user.role }, config.secret, {
+        var token = jwt.sign({ id: user._id, role: user.role }, process.env.secret, {
             expiresIn: 7200 // expires in 2 hours
         });
 

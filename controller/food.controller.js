@@ -1,5 +1,5 @@
 var Food = require('../model/food.model')
-var config = require('../config');
+
 require('../middleware/cloundinary')
 
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
