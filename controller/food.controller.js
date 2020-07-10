@@ -53,6 +53,32 @@ module.exports.getFoods = async function (req, res, next) {
     }
 };
 
+module.exports.getNorthFoods = async function (req, res, next) {
+    try {
+        var food = await Food.find({ 'location': 'Miền Bắc' });
+        res.status(200).send(food);
+    } catch (err) {
+        next(err.message)
+    }
+};
+
+module.exports.getCentralFoods = async function (req, res, next) {
+    try {
+        var food = await Food.find({ 'location': 'Miền Trung' });
+        res.status(200).send(food);
+    } catch (err) {
+        next(err.message)
+    }
+};
+
+module.exports.getSouthFoods = async function (req, res, next) {
+    try {
+        var food = await Food.find({ 'location': 'Miền Nam' });
+        res.status(200).send(food);
+    } catch (err) {
+        next(err.message)
+    }
+};
 module.exports.delete = async function (req, res, next) {
     try {
         if (req.role == "admin") {

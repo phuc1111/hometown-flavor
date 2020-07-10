@@ -10,6 +10,9 @@ var VerifyHousewife = require('../middleware/checkHousewife')
 var multer = require('multer')
 var upload = multer({ dest: 'assets/uploads/' })
 router.get('/', controller.getFoods);
+router.get('/north', controller.getNorthFoods);
+router.get('/central', controller.getCentralFoods);
+router.get('/south', controller.getSouthFoods);
 
 router.post('/create',
     verifyToken,
