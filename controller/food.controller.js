@@ -16,6 +16,7 @@ module.exports.create = async function (req, res, next) {
                 const result = await cloudinary.v2.uploader.upload(req.file.path)
                 req.body.image = result.url;
                 req.body.image_id = result.public_id;
+                req.body.housewife_id = req.userId;
                 //create food
                 var food = await Food.create(req.body);
                 res.status(200).send(food);
@@ -36,17 +37,9 @@ module.exports.create = async function (req, res, next) {
 
 module.exports.getFoods = async function (req, res, next) {
     try {
-        if (!req.body.location) {
-            var food = await Food.find();
-            res.status(200).send(food);
-        } else {
-            if ((req.body.location == "Miền Bắc") || (req.body.location == "Miền Nam") || (req.body.location == "Miền Trung")) {
-                var food = await Food.find({ 'location': req.body.location });
-                res.status(200).send(food);
-            } else {
-                res.status(400).send({ message: "Vùng miền không hợp lệ" });
-            }
-        }
+
+        var food = await Food.find();
+        res.status(200).send(food);
     } catch (err) {
         console.log(err);
         next(err.message)

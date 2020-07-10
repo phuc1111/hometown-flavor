@@ -28,5 +28,10 @@ router.delete('/delete/:id',
     controller.delete
 )
 
+router.get('/getmyorder',
+    VerifyToken,
+    controller.getMyOrder
+)
+
 
 module.exports = router;

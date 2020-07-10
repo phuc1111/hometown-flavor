@@ -29,6 +29,9 @@ var orderSchema = new mongoose.Schema({
     },
     total: {
         type: Number
+    },
+    housewife_id: {
+        type: String
     }
 
 });

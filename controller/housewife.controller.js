@@ -1,4 +1,5 @@
 var Users = require('../model/user.model');
+var Orders = require('../model/order.model');
 
 var code = require('../autoCreate/code');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -14,7 +15,7 @@ var authToken = 'e2788c659d1ee62a7a9ce90517fbb189'; // Your Auth Token from www.
 
 var client = new twilio(accountSid, authToken);
 
-
+var date = require('../autoCreate/date')
 
 module.exports.login = function (req, res) {
     Users.findOne({ phone: req.body.phone }, function (err, user) {
@@ -166,4 +167,21 @@ module.exports.changeAvatar = function (req, res, next) {
         next(err);
     })
 
+}
+
+module.exports.getMyOrder = async function (req, res, next) {
+    try {
+        var crDate = date.getCurrentDay();
+        var order = await Orders.find({
+            housewife_id: req.userId,
+            $or: [{ date_getOrder: crDate }, { date_order: crDate }]
+        });
+
+        res.status(200).send({
+            "message": "Lấy đơn hàng thành công",
+            order
+        });
+    } catch (error) {
+        next(error);
+    }
 }

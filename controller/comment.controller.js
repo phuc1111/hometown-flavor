@@ -26,34 +26,36 @@ module.exports.create = function (req, res, next) {
 
 module.exports.getComment = function (req, res, next) {
 
-    Comment.find({ id_food: req.params.id_food }).then(data => {
-        res.status(200).send(comment);
+    Food.findById(req.params.id_food).then(() => {
+        Comment.find({ id_food: req.params.id_food }).then(data => {
+            res.status(200).send(comment);
+        }).catch(err => {
+            res.status(404).send({
+                message: "Sản phẩm này chưa có bình luận",
+                err
+            });
+        })
     }).catch(err => {
         res.status(404).send({
             message: "Không tìm thấy sản phẩm này",
             err
         });
-
     })
-
-
 
 };
 
 module.exports.delete = function (req, res, next) {
     Comment.find({ '_id': req.params.id })
         .then(comment => {
-
             if (comment.user_id = req.userId) {
                 Comment.deleteOne({ '_id': req.params.id })
                     .then(() => {
                         res.send({ "message": "Xóa bình luận thành công" });
                     }).catch(err => {
-                        res.status(401).send(err);
+                        res.status(500).send(err);
                     })
-
             } else {
-                res.status(401).send({ "message": "Bạn không thể xóa bình luận của người khác" });
+                res.status(403).send({ "message": "Bạn không thể xóa bình luận này" });
             }
         }).catch(err => {
             res.status(404).send({ "message": "Không tìm thấy bình luận" });

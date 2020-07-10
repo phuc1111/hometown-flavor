@@ -21,6 +21,9 @@ var foodSchema = new mongoose.Schema({
         type: String,
         required: [true, 'housewife_name is required']
     },
+    housewife_id: {
+        type: String,
+    },
     price: {
         type: Number,
         required: [true, 'price is required']

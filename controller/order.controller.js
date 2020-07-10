@@ -3,9 +3,11 @@ var Food = require('../model/food.model')
 
 module.exports.create = async function (req, res, next) {
     Food.findById({ _id: req.body.food_id }).then(food => {
+        console.log(food)
         req.body.user_id = req.userId;
         req.body.total = parseInt(food.price) * req.body.number;
         req.body.image = food.image;
+        req.body.housewife_id = food.housewife_id;
         if (food.isCkeck == true) {
             Order.create(req.body).then(order => {
                 res.status(200).send({
