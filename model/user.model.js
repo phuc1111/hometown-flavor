@@ -9,8 +9,8 @@ var userSchema = new mongoose.Schema({
         required: [true, 'Password is required']
     },
     name: {
-        type: String
-
+        type: String,
+        default: null
     },
     avatar: String,
     phone: {
@@ -19,8 +19,8 @@ var userSchema = new mongoose.Schema({
         required: [true, 'Phone is required']
     },
     address: {
-        type: String
-
+        type: String,
+        default: null
     },
     joinDate: {
         type: Date,
@@ -40,7 +40,8 @@ var userSchema = new mongoose.Schema({
         default: code.createCode
     },
     email: {
-        type: String
+        type: String,
+        default: null
     },
     image_id: String
 });
