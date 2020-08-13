@@ -17,10 +17,10 @@ router.patch('/check/:id', VerifyToken, controller.checkOk);
 router.patch('/update/:id',
     VerifyToken,
     validate.checkCreate,
-    controller.update
 );
 
 router.delete('/delete/:id', VerifyToken, controller.delete);
+router.get('/getAllComment', VerifyToken, controller.getAllComment);
 
 
 module.exports = router;

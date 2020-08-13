@@ -24,6 +24,8 @@ router.post('/signup',
 
 router.get('/me', verifyToken, controller.me);
 
+router.get('/getAllUser', verifyToken, controller.getAllUser);
+
 router.patch('/check/:code', verifyToken, controller.check);
 
 router.delete('/delete', verifyToken, controller.delete);

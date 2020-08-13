@@ -18,7 +18,7 @@ router.get('/forgotpassword/:phone', controller.forgotPassword);
 router.post('/signup', check.checkSignup, controller.signup);
 
 router.get('/me', VerifyToken, controller.me)
-
+router.get('/getAllHousewife', VerifyToken, controller.getAllHousewife)
 router.patch('/check/:id',
     VerifyToken,
     controller.check

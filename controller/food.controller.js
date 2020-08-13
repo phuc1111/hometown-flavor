@@ -47,7 +47,7 @@ module.exports.getFoods = async function(req, res, next) {
             var food = await Food.find({ 'location': "Miền Trung" });
             res.status(200).send(food);
         } else {
-           var food = await Food.find();
+            var food = await Food.find();
             res.status(200).send(food);
         }
 

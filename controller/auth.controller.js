@@ -281,3 +281,17 @@ module.exports.changepassword = async function(req, res, next) {
         next(error);
     }
 }
+
+module.exports.getAllUser = async function(req, res, next) {
+    try {
+        if (req.role == "admin") {
+            var users = await Users.find();
+            res.status(200).send(users);
+        } else {
+            res.status(403).send({ "message": "Không có quyền truy cập" });
+        }
+
+    } catch (err) {
+        next(err.message)
+    }
+}
