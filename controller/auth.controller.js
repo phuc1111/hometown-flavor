@@ -146,8 +146,7 @@ module.exports.check = async function(req, res, next) {
 
 module.exports.delete = async function(req, res, next) {
     try {
-        await cloudinary.v2.uploader.destroy(req.body.image_id);
-        var user = await Users.deleteOne({ '_id': req.userId });
+        var user = await Users.deleteOne({ '_id': req.params.id });
         res.send({ "message": "Xóa user thành công", user: user });
     } catch (err) {
         next(err.message)

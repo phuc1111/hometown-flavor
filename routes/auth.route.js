@@ -28,7 +28,7 @@ router.get('/getAllUser', verifyToken, controller.getAllUser);
 
 router.patch('/check/:code', verifyToken, controller.check);
 
-router.delete('/delete', verifyToken, controller.delete);
+router.delete('/delete/:id', verifyToken, controller.delete);
 
 router.post('/forgotpassword/:phone', controller.forgotPassword);
 

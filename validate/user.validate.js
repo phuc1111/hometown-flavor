@@ -13,7 +13,7 @@ var checkPhone = phone => {
     }
 }
 
-module.exports.checkCreate = function (req, res, next) {
+module.exports.checkCreate = function(req, res, next) {
 
     var err = [];
     var message = null;
@@ -41,12 +41,15 @@ module.exports.checkCreate = function (req, res, next) {
     next()
 }
 
-module.exports.checkSignup = function (req, res, next) {
+module.exports.checkSignup = function(req, res, next) {
     var errors = [];
     if (!req.body.phone) {
         errors.push('Vui lòng nhập số điện thoại');
     } else {
         if (!checkPhone(req.body.phone)) {
+            errors.push('Số điện thoại không hợp lệ');
+        }
+        if (req.body.phone.length > 10) {
             errors.push('Số điện thoại không hợp lệ');
         }
     }
@@ -65,7 +68,7 @@ module.exports.checkSignup = function (req, res, next) {
     next()
 }
 
-module.exports.checkChangAvatar = function (req, res, next) {
+module.exports.checkChangAvatar = function(req, res, next) {
     var errors = [];
 
     if (!req.file) {
@@ -79,7 +82,7 @@ module.exports.checkChangAvatar = function (req, res, next) {
     next()
 }
 
-module.exports.checkChangPassword = function (req, res, next) {
+module.exports.checkChangPassword = function(req, res, next) {
     var errors = [];
 
     if (!req.body.newPassword) {

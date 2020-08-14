@@ -3,7 +3,7 @@ var checkemail = email => {
     return re.test(email);
 }
 
-module.exports.checkCreate = function (req, res, next) {
+module.exports.checkCreate = function(req, res, next) {
     var errors = [];
     if (!req.body.name) {
         errors.push('Vui lòng nhập tên');
@@ -17,7 +17,10 @@ module.exports.checkCreate = function (req, res, next) {
     if (!req.body.phone) {
         errors.push('Vui lòng nhập số điện thoại');
     } else {
-        if (req.body.phone.length < 6 || req.body.phone.length > 12) {
+        if (!checkPhone(req.body.phone)) {
+            errors.push('Số điện thoại không hợp lệ');
+        }
+        if (req.body.phone.length > 10) {
             errors.push('Số điện thoại không hợp lệ');
         }
     }
