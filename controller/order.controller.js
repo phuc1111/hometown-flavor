@@ -8,7 +8,7 @@ module.exports.create = async function(req, res, next) {
         req.body.total = parseInt(food.price) * req.body.number;
         req.body.image = food.image;
         req.body.housewife_id = food.housewife_id;
-        req.body.food = food;
+        req.body.foodss = food;
         if (food.isCkeck == true) {
             Order.create(req.body).then(order => {
                 res.status(200).send({
