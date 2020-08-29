@@ -32,6 +32,9 @@ var orderSchema = new mongoose.Schema({
     },
     housewife_id: {
         type: String
+    },
+    foods: {
+        type: Object
     }
 
 });
