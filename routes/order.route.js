@@ -8,6 +8,8 @@ router.get('/getOrder', VerifyToken, controller.getOrder);
 
 router.get('/getAllOrder', VerifyToken, controller.getAllOrder);
 
+router.get('/getOrderById/:id', VerifyToken, controller.getOrderById);
+
 router.post('/create', validate.checkCreate, VerifyToken, controller.create);
 
 router.patch('/update/:id', VerifyToken, controller.update);

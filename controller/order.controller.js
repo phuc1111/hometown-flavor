@@ -64,6 +64,15 @@ module.exports.getOrder = async function(req, res, next) {
     }
 }
 
+module.exports.getOrderById = async function(req, res, next) {
+    try {
+        var order = await Order.findById(req.params.id);
+        res.status(200).send(order);
+    } catch (err) {
+        next(err.message)
+    }
+}
+
 module.exports.getAllOrder = async function(req, res, next) {
     try {
         if (req.role == "admin") {
