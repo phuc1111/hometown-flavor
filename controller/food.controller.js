@@ -14,9 +14,9 @@ module.exports.create = async function (req, res, next) {
     try {
         if (req.role == "housewife") {
             if ((req.body.location == "Miền Bắc") || (req.body.location == "Miền Nam") || (req.body.location == "Miền Trung")) {
-                const result = await cloudinary.v2.uploader.upload(req.file.path)
-                req.body.image = result.url;
-                req.body.image_id = result.public_id;
+                // const result = await cloudinary.v2.uploader.upload(req.file.path)
+                // req.body.image = result.url;
+                // req.body.image_id = result.public_id;
                 req.body.housewife_id = req.userId;
                 //create food
                 var food = await Food.create(req.body);
