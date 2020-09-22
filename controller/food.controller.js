@@ -1,4 +1,5 @@
 var Food = require('../model/food.model')
+var Comment = require('../model/comment.model')
 
 require('../middleware/cloundinary')
 
@@ -9,7 +10,7 @@ const cloudinary = require('cloudinary')
 var salt = bcrypt.genSaltSync(10);
 
 
-module.exports.create = async function(req, res, next) {
+module.exports.create = async function (req, res, next) {
     try {
         if (req.role == "housewife") {
             if ((req.body.location == "Miền Bắc") || (req.body.location == "Miền Nam") || (req.body.location == "Miền Trung")) {
@@ -35,7 +36,7 @@ module.exports.create = async function(req, res, next) {
 
 };
 
-module.exports.getFoods = async function(req, res, next) {
+module.exports.getFoods = async function (req, res, next) {
     try {
         if (req.query.location == 1) {
             var food = await Food.find({ 'location': "Miền Bắc" });
@@ -57,7 +58,7 @@ module.exports.getFoods = async function(req, res, next) {
     }
 };
 
-module.exports.getNorthFoods = async function(req, res, next) {
+module.exports.getNorthFoods = async function (req, res, next) {
     try {
         var food = await Food.find({ 'location': 'Miền Bắc' });
         res.status(200).send(food);
@@ -66,7 +67,7 @@ module.exports.getNorthFoods = async function(req, res, next) {
     }
 };
 
-module.exports.getCentralFoods = async function(req, res, next) {
+module.exports.getCentralFoods = async function (req, res, next) {
     try {
         var food = await Food.find({ 'location': 'Miền Trung' });
         res.status(200).send(food);
@@ -75,7 +76,7 @@ module.exports.getCentralFoods = async function(req, res, next) {
     }
 };
 
-module.exports.getSouthFoods = async function(req, res, next) {
+module.exports.getSouthFoods = async function (req, res, next) {
     try {
         var food = await Food.find({ 'location': 'Miền Nam' });
         res.status(200).send(food);
@@ -83,7 +84,7 @@ module.exports.getSouthFoods = async function(req, res, next) {
         next(err.message)
     }
 };
-module.exports.delete = async function(req, res, next) {
+module.exports.delete = async function (req, res, next) {
     try {
         if (req.role == "admin") {
             await cloudinary.v2.uploader.destroy(req.params.image_id);
@@ -99,12 +100,15 @@ module.exports.delete = async function(req, res, next) {
     }
 }
 
-module.exports.getFoodFromId = async function(req, res, next) {
+module.exports.getFoodFromId = async function (req, res, next) {
     try {
         var food = await Food.findById(req.params.id);
+        var comments = await Comment.find({ id_food: req.params.id });
+
         res.status(200).send({
             message: "Lấy chi tiết sản phẩm thành công",
-            data: food
+            food: food,
+            comments: comments
         });
 
     } catch (err) {
@@ -117,7 +121,7 @@ module.exports.getFoodFromId = async function(req, res, next) {
     }
 }
 
-module.exports.checkOk = async function(req, res, next) {
+module.exports.checkOk = async function (req, res, next) {
     try {
         if (req.role == "admin") {
             var food = await Food.updateOne({ _id: req.params.id }, {
