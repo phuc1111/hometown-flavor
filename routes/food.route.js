@@ -15,6 +15,7 @@ router.get('/central', controller.getCentralFoods);
 router.get('/south', controller.getSouthFoods);
 
 router.post('/postImage',
+    upload.single('image'),
     controller.postImage
 );
 
