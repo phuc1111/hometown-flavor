@@ -36,6 +36,20 @@ module.exports.create = async function (req, res, next) {
 
 };
 
+
+module.exports.postImage = async function (req, res, next) {
+    try {
+        const result = await cloudinary.v2.uploader.upload(req.body.image_base64);
+        res.status(200).send({
+            message: "Thêm hình ảnh thành công",
+            image: result.secure_url
+        })
+    } catch (err) {
+        console.log(err.message);
+        next(err.message)
+    }
+}
+
 module.exports.getFoods = async function (req, res, next) {
     try {
         if (req.query.location == 1) {

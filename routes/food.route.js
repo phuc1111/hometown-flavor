@@ -14,6 +14,10 @@ router.get('/north', controller.getNorthFoods);
 router.get('/central', controller.getCentralFoods);
 router.get('/south', controller.getSouthFoods);
 
+router.post('/postImage',
+    controller.postImage
+);
+
 router.post('/create',
     verifyToken,
     upload.single('image'),
