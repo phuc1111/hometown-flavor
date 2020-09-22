@@ -8,9 +8,9 @@ module.exports.checkCreate = function (req, res, next) {
     if (!req.body.location) {
         errors.push('Vui lòng thêm vùng miền');
     }
-    if (!req.file) {
-        errors.push('Chưa có hình');
-    }
+    // if (!req.file) {
+    //     errors.push('Chưa có hình');
+    // }
     if (!req.body.description) {
         errors.push('Vui lòng thêm mô tả');
     }
