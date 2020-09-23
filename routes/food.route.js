@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../controller/food.controller')
 var validate = require('../validate/food.validate')
-var VerifyAdmin = require('../middleware/check Admin')
+var VerifyAdmin = require('../middleware/checkAdmin')
 var verifyToken = require('../controller/VerifyToken')
 var VerifyHousewife = require('../middleware/checkHousewife')
 
