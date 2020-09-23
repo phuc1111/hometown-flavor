@@ -43,7 +43,7 @@ module.exports.postImage = async function (req, res, next) {
         const result = await cloudinary.v2.uploader.upload(req.body.image_base64);
         res.status(200).send({
             message: "Thêm hình ảnh thành công",
-            image: result.secure_url
+            image: result.url
         })
     } catch (err) {
         console.log(err.message);

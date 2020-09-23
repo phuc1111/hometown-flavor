@@ -41,7 +41,7 @@ const cron = require('cron');
 const foodController = require('./controller/food.controller'); // check status
 
 const job = new cron.CronJob({
-    cronTime: '00 00 17 * * 0-6', // Chạy Jobs vào 23h30 hằng đêm
+    cronTime: '00 00 17 * * 0-6', // Chạy Jobs vào 17H hang ngay
     onTick: function () {
         foodController.checkStatus();
         console.log('Cron job runing...');
