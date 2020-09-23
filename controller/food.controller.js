@@ -87,6 +87,20 @@ module.exports.getFoodByHousewife = async function (req, res, next) {
     }
 };
 
+module.exports.getAllFoodForAdmin = async function (req, res, next) {
+    try {
+        if (req.role == "admin") {
+            var food = await Food.find();
+            res.status(200).send(food);
+        } else {
+            res.status(403).send({ message: "Không có quyền truy cập" })
+        }
+    } catch (err) {
+        console.log(err);
+        next(err.message)
+    }
+};
+
 module.exports.getNorthFoods = async function (req, res, next) {
     try {
         var food = await Food.find({ 'location': 'Miền Bắc' });

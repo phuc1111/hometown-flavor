@@ -10,8 +10,7 @@ var multer = require('multer')
 var upload = multer({ dest: 'assets/uploads/' })
 router.get('/', controller.getFoods);
 router.get('/getFoodByHousewife', verifyToken, controller.getFoodByHousewife);
-
-
+router.get('/getAll', verifyToken, controller.getAllFoodForAdmin);
 
 router.get('/north', controller.getNorthFoods);
 router.get('/central', controller.getCentralFoods);
