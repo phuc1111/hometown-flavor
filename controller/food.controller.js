@@ -73,6 +73,20 @@ module.exports.getFoods = async function (req, res, next) {
     }
 };
 
+module.exports.getFoodByHousewife = async function (req, res, next) {
+    try {
+        if (req.role == "housewife") {
+            var food = await Food.find({ housewife_id: req.userId, isCkeck: true });
+            res.status(200).send(food);
+        } else {
+            res.status(403).send({ message: "Không có quyền truy cập" })
+        }
+    } catch (err) {
+        console.log(err);
+        next(err.message)
+    }
+};
+
 module.exports.getNorthFoods = async function (req, res, next) {
     try {
         var food = await Food.find({ 'location': 'Miền Bắc' });
