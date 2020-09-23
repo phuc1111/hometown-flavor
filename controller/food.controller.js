@@ -1,5 +1,6 @@
 var Food = require('../model/food.model')
 var Comment = require('../model/comment.model')
+var date = require('../autoCreate/date')
 
 require('../middleware/cloundinary')
 
@@ -53,16 +54,16 @@ module.exports.postImage = async function (req, res, next) {
 module.exports.getFoods = async function (req, res, next) {
     try {
         if (req.query.location == 1) {
-            var food = await Food.find({ 'location': "Miền Bắc" });
+            var food = await Food.find({ 'location': "Miền Bắc", isCkeck: true });
             res.status(200).send(food);
         } else if (req.query.location == 2) {
-            var food = await Food.find({ 'location': "Miền Nam" });
+            var food = await Food.find({ 'location': "Miền Nam", isCkeck: true });
             res.status(200).send(food);
         } else if (req.query.location == 3) {
-            var food = await Food.find({ 'location': "Miền Trung" });
+            var food = await Food.find({ 'location': "Miền Trung", isCkeck: true });
             res.status(200).send(food);
         } else {
-            var food = await Food.find();
+            var food = await Food.find({ isCkeck: true });
             res.status(200).send(food);
         }
 
@@ -89,6 +90,7 @@ module.exports.getCentralFoods = async function (req, res, next) {
         next(err.message)
     }
 };
+
 
 module.exports.getSouthFoods = async function (req, res, next) {
     try {
@@ -148,8 +150,18 @@ module.exports.checkOk = async function (req, res, next) {
         } else {
             res.status(403).send({ message: "Không có quyền update sản phẩm" });
         }
+    } catch (err) {
+        next(err.message)
+    }
+}
 
-
+module.exports.checkStatus = async function (req, res, next) {
+    try {
+        await Food.updateMany({ date: { $lt: date.getNextDay } }, {
+            $set: {
+                isCkeck: false
+            }
+        });
     } catch (err) {
         next(err.message)
     }

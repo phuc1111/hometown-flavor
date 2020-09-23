@@ -37,6 +37,20 @@ app.use("/api/foods", foodRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/comments", commentRoutes);
 
+const cron = require('cron');
+const foodController = require('./controller/food.controller'); // check status
+
+const job = new cron.CronJob({
+    cronTime: '00 00 17 * * 0-6', // Chạy Jobs vào 23h30 hằng đêm
+    onTick: function () {
+        foodController.checkStatus();
+        console.log('Cron job runing...');
+    },
+    start: true,
+    timeZone: 'Asia/Ho_Chi_Minh' // Lưu ý set lại time zone cho đúng 
+});
+
+job.start();
 
 app.listen(port, () =>
     console.log(`Hometown flavor listening at http://localhost:${port}`)
