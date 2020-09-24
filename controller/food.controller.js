@@ -135,9 +135,15 @@ module.exports.delete = async function (req, res, next) {
             await Food.deleteOne({ '_id': req.params.id });
             res.send({ "message": "Xóa thành công" });
         } else if (req.role == "housewife") {
-            var food = Food.find({ housewife_id: req.userId });
-            await Food.deleteOne({ '_id': food._id });
-            res.send({ "message": "Xóa thành công" });
+            var food = await Food.findById(req.params.id);
+            if (food.housewife_id == req.userId) {
+                await Food.deleteOne({ '_id': req.params.id });
+                res.send({ "message": "Xóa thành công" });
+            } else {
+                res.status(403).send({ message: "Không có quyền xóa sản phẩm" });
+            }
+            // console.log();
+
         } else {
             res.status(403).send({ message: "Không có quyền xóa sản phẩm" });
 
