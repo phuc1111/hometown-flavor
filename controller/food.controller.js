@@ -136,6 +136,9 @@ module.exports.delete = async function (req, res, next) {
             res.send({ "message": "Xóa thành công" });
         } else if (req.role == "housewife") {
             var food = await Food.findById(req.params.id);
+            if (!food) {
+                res.status(404).send({ message: "Không tìm thấy sản phẩm" });
+            }
             if (food.housewife_id == req.userId) {
                 await Food.deleteOne({ '_id': req.params.id });
                 res.send({ "message": "Xóa thành công" });
